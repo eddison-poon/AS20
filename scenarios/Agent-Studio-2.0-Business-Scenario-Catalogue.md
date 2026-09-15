@@ -1,6 +1,6 @@
 # Agent Studio 2.0 — Business Scenario Catalogue
 
-**Document Status:** Draft v0.1  
+**Document Status:** Draft v0.2 — Reconciled 16 Sep 2026  
 **Release Context:** Phase 1a — New Ideation, target 28 Sep 2026  
 **Parent Strategy:** `docs/strategy/Agent-Studio-2.0-Functional-Test-Strategy.md`  
 **Purpose:** Define the business-level functional scenario inventory from which detailed Manual Test Definitions, RBAC executions, smoke suites and regression suites will be derived.
@@ -17,7 +17,7 @@ Traceability model:
 
 One Business Scenario may have multiple Test Definitions. A Test Definition may then be executed using different roles, tenants, spaces, agent states, versions, publication levels and source combinations.
 
-The future role/access matrix therefore becomes an execution and authorization dimension without requiring the entire functional catalogue to be redesigned.
+The role/access matrix is therefore an execution and authorization dimension without requiring the entire functional catalogue to be redesigned.
 
 ### Priority
 
@@ -36,31 +36,27 @@ The future role/access matrix therefore becomes an execution and authorization d
 
 ## 2. Release-Critical Golden Journey
 
-The principal AS2.0 functional journey is:
-
 **Pattern / Tenant Governance → Agent Builder → Agent Configuration → Publish Version → Marketplace / Private Availability → Authorized User Opens Agent → Select / Upload Sources → Execute Prompt → Receive Response → Generate / Retrieve Output File**
-
-This journey should ultimately form the core P0 E2E regression path.
 
 ---
 
-## 3. Scenario Summary
+## 3. Scenario Summary — Reconciled
 
 | Capability | P0 | P1 | P2 / TBD | Total |
 |---|---:|---:|---:|---:|
-| Foundation / Pattern & Tenant Governance | 8 | 10 | 5 | 23 |
+| Foundation / Pattern & Tenant Governance | **10** | **14** | **6** | **30** |
 | Agent Studio Homepage & Navigation | 0 | 3 | 3 | 6 |
-| Agent Builder & Configuration | 6 | 10 | 4 | 20 |
-| Publication & Versioning | 7 | 6 | 2 | 15 |
+| Agent Builder & Configuration | **6** | **11** | **3** | 20 |
+| Publication & Versioning | **8** | **7** | 2 | **17** |
 | Agent Marketplace | 4 | 6 | 4 | 14 |
 | Agent Runtime / Harness | 4 | 9 | 2 | 15 |
 | Runtime Sources | 3 | 10 | 2 | 15 |
 | Generated Files | 2 | 7 | 1 | 10 |
 | Cross-Cutting RBAC / Isolation | 7 | 5 | 2 | 14 |
 | End-to-End Journeys | 8 | 3 | 1 | 12 |
-| **Total** | **49** | **69** | **26** | **144** |
+| **Total** | **52** | **75** | **26** | **153** |
 
-> Counts are planning counts, not a commitment to 144 manual test cases. Multiple detailed test definitions may be derived from one scenario, while some supporting scenarios may be combined during implementation.
+> Counts are planning counts, not a commitment to 153 manual test cases. Related scenarios are intentionally covered by reusable Test Definitions and role/scope execution variants.
 
 ---
 
@@ -73,7 +69,7 @@ This journey should ultimately form the core P0 E2E regression path.
 | GOV-PAT-001 | P0 | Low Risk Pattern exists and is available for assignment | Required Low Risk Pattern is available with its configured governance/resources | Design-ready |
 | GOV-PAT-002 | P0 | SDLC Pattern exists and is available for assignment | Required SDLC Pattern is available | Design-ready; exact configuration TBD |
 | GOV-PAT-003 | P1 | View pattern definition through Pattern UI | User can view pattern content according to intended read-only behaviour | Dependency: reconcile read-only Pattern UI vs editable Pattern Tenant screens |
-| GOV-PAT-004 | P1 | Maintain pattern overview | Authorized administration can maintain pattern name/purpose/audience/adopter information | Dependency: role matrix |
+| GOV-PAT-004 | P1 | Maintain pattern overview | Authorized administration can maintain pattern name/purpose/audience/adopter information | Dependency: exact administration role |
 | GOV-PAT-005 | P0 | Maintain shared pattern rules | Pattern-level purpose/boundaries/common rules/when-unsure are saved and applied | Design-ready |
 | GOV-PAT-006 | P1 | Maintain pattern skills and connections | Authorized administration can define resources made available by pattern | Exact MCP/skill list TBD |
 | GOV-PAT-007 | P1 | Connection requires adopter access rather than carrying credentials | Pattern carries connection requirement but not adopter credentials | Design-ready |
@@ -105,8 +101,8 @@ This journey should ultimately form the core P0 E2E regression path.
 |---|---|---|---|---|
 | GOV-SPC-001 | P0 | Default space cannot be removed when defined as mandatory | Platform protects required default space | Design-ready |
 | GOV-SPC-002 | P1 | Default-space membership/resources inherit/update correctly | Default space remains aligned with tenant inheritance rules | Design-ready |
-| GOV-SPC-003 | P1 | Add tenant member and assign space/role | Membership is created with intended space and role | Dependency: final role matrix |
-| GOV-SPC-004 | P1 | Space owner manages space access/roles | Authorized space owner can maintain space membership | Dependency: final role matrix |
+| GOV-SPC-003 | P1 | Add tenant member and assign space/role | Membership is created with intended space and role | Design-ready; role matrix received |
+| GOV-SPC-004 | P1 | Space owner manages space access/roles | Authorized Space Owner can maintain space membership | Design-ready; RAM 6.3 |
 | GOV-SPC-005 | P2 | Create additional space | Additional space can be created where Day-1 scope permits | Dependency: design wording conflicts with optional-space flow |
 | GOV-SPC-006 | P2 | Separate spaces maintain independent membership/resource scope | Space-level boundaries are maintained | Dependency: additional-space confirmation |
 | GOV-SPC-007 | P2 | Membership changes propagate according to inheritance rules | Add/remove/change is reflected at intended tenant/space level | Dependency: final inheritance semantics |
@@ -120,7 +116,7 @@ This journey should ultimately form the core P0 E2E regression path.
 | NAV-001 | P1 | Open Agent Studio homepage | Homepage loads with permitted services/navigation | Design-ready |
 | NAV-002 | P1 | Navigate to Agent Builder | Correct Agent Builder entry opens | Design-ready |
 | NAV-003 | P1 | Navigate to Agent Marketplace | Correct marketplace opens | Design-ready |
-| NAV-004 | P2 | Navigate to Tenant/Space Management | Management page opens when entitled | Dependency: role matrix |
+| NAV-004 | P2 | Navigate to Tenant/Space Management | Management page opens when entitled | Design-ready against RAM; exact navigation semantics remain clarification |
 | NAV-005 | P2 | Navigate to other in-scope modules | Evaluation/MCP/Skill/Registry/Agentic Flow links open applicable capability | Dependency: detailed scope/screens incomplete |
 | NAV-006 | TBD | Use homepage assistant/service cards | Assistant/card behaviour matches confirmed release design | Conditional |
 
@@ -132,7 +128,7 @@ This journey should ultimately form the core P0 E2E regression path.
 
 | ID | Pri | Business Scenario | Expected Business Outcome | Status / Dependency |
 |---|---|---|---|---|
-| BLD-CRT-001 | P0 | Authorized creator enters assigned space and starts agent creation | Creator can create only within assigned scope | Dependency: role matrix for exact role name |
+| BLD-CRT-001 | P0 | Authorized Space Designer enters assigned space and starts agent creation | Creator can create only within assigned scope | Design-ready; Space Designer = Agent Creator |
 | BLD-CRT-002 | P0 | Low Risk Pattern is default during agent creation | Low Risk is pre-selected/default as required | Design-ready; UI location TBD |
 | BLD-CRT-003 | P0 | Agent is associated with exactly one pattern | Multiple simultaneous patterns cannot be assigned to one agent | Design-ready |
 | BLD-CRT-004 | P1 | Create agent through natural-language idea | Builder captures idea and initiates assisted creation | Design-ready |
@@ -167,8 +163,8 @@ This journey should ultimately form the core P0 E2E regression path.
 | ID | Pri | Business Scenario | Expected Business Outcome | Status / Dependency |
 |---|---|---|---|---|
 | PUB-001 | P0 | Draft agent is not generally available before publication | Normal users cannot discover/use unpublished draft | Design-ready |
-| PUB-002 | P0 | Publish initial private-testing version | Frozen version is created with private visibility | Design-ready |
-| PUB-003 | P0 | Publish initial marketplace-testing version | Frozen version becomes discoverable in permitted marketplace scope | Design-ready |
+| PUB-002 | P0 | Publish initial private-testing version | Frozen version is created with private visibility | Design-ready functionally; publisher role mapping pending |
+| PUB-003 | P0 | Publish initial marketplace-testing version | Frozen version becomes discoverable in permitted marketplace scope | Design-ready functionally; publisher role mapping pending |
 | PUB-004 | P1 | Provide What's New/version notes | Publication metadata saves against version | Design-ready |
 | PUB-005 | P1 | Generate What's New text | Generated release-note assistance behaves correctly where enabled | Design-ready |
 | PUB-006 | P1 | Set category | Published version retains selected category | Design-ready |
@@ -182,7 +178,7 @@ This journey should ultimately form the core P0 E2E regression path.
 | ID | Pri | Business Scenario | Expected Business Outcome | Status / Dependency |
 |---|---|---|---|---|
 | VER-001 | P0 | Modify agent after Version N is published | New edits remain draft and Version N remains active | Design-ready |
-| VER-002 | P0 | Publish Version N+1 | New frozen version is created from approved draft state | Design-ready |
+| VER-002 | P0 | Publish Version N+1 | New frozen version is created from approved draft state | Design-ready functionally; publisher role mapping pending |
 | VER-003 | P0 | Marketplace/runtime switches to newly published version | Eligible users receive Version N+1 only after successful publish | Design-ready |
 | VER-004 | P1 | Failed publication preserves existing published version | Version N remains usable and uncorrupted | Design-ready |
 | VER-005 | P1 | Version metadata/history remains coherent | Version number/notes/state align with lifecycle | Design-ready |
@@ -196,8 +192,8 @@ This journey should ultimately form the core P0 E2E regression path.
 | ID | Pri | Business Scenario | Expected Business Outcome | Status / Dependency |
 |---|---|---|---|---|
 | MKT-001 | P0 | Authorized user opens marketplace | Marketplace shows agents user is permitted to discover | Design-ready |
-| MKT-002 | P0 | Published marketplace agent becomes discoverable | Successful publication results in marketplace availability | Design-ready |
-| MKT-003 | P0 | Private agent is not exposed as general marketplace agent | Private visibility remains private | Design-ready |
+| MKT-002 | P0 | Published marketplace agent becomes discoverable | Successful publication results in marketplace availability | Design-ready; exact marketplace scope pending |
+| MKT-003 | P0 | Private agent is not exposed as general marketplace agent | Private visibility remains private | Design-ready functionally; private-access role mapping pending |
 | MKT-004 | P0 | Cross-space/cross-tenant unauthorized agent is not discoverable | Isolation boundary is enforced | Dependency: final marketplace scope |
 | MKT-005 | P1 | Search by agent name/description | Matching permitted agents returned | Design-ready |
 | MKT-006 | P1 | Filter by category | Results respect category and authorization | Design-ready |
@@ -275,23 +271,23 @@ This journey should ultimately form the core P0 E2E regression path.
 
 # 12. Cross-Cutting RBAC, Governance & Isolation
 
-These scenarios remain business-level placeholders until the official accessibility matrix is received.
+The official Roles & Actions Matrix is now the authorization baseline. Role permutations remain in the separate RBAC and execution artifacts rather than being duplicated in this business catalogue.
 
 | ID | Pri | Business Scenario | Expected Business Outcome | Status / Dependency |
 |---|---|---|---|---|
-| SEC-RBAC-001 | P0 | Tenant Owner performs permitted tenant administration | Authorized actions succeed | Dependency: role matrix |
-| SEC-RBAC-002 | P0 | Space Owner performs permitted space administration | Authorized actions succeed only within assigned scope | Dependency |
-| SEC-RBAC-003 | P0 | Agent Creator/Space Designer performs permitted agent lifecycle actions | Create/configure/test/publish access matches approved model | Dependency |
-| SEC-RBAC-004 | P0 | Space User uses permitted marketplace agent | Runtime access succeeds without administrative capability | Dependency |
-| SEC-RBAC-005 | P0 | Unauthorized role cannot perform restricted action through UI | Restricted control is hidden/disabled/read-only as designed | Dependency |
-| SEC-RBAC-006 | P0 | Unauthorized role cannot bypass UI using direct URL/service request | Server-side authorization rejects restricted operation | Dependency + API availability |
+| SEC-RBAC-001 | P0 | Tenant Owner performs permitted tenant administration | Authorized actions succeed | Design-ready against RAM |
+| SEC-RBAC-002 | P0 | Space Owner performs permitted space administration | Authorized actions succeed only within assigned scope | Design-ready against RAM |
+| SEC-RBAC-003 | P0 | Space Designer performs permitted agent lifecycle actions | Create/configure/test access matches approved model | Design-ready against RAM; publish mapping separate |
+| SEC-RBAC-004 | P0 | Space User uses permitted marketplace agent | Runtime access succeeds without administrative capability | Design-ready against RAM |
+| SEC-RBAC-005 | P0 | Unauthorized role cannot perform restricted action through UI | Restricted control is hidden/disabled/read-only as designed | Design-ready against RAM |
+| SEC-RBAC-006 | P0 | Unauthorized role cannot bypass UI using direct URL/service request | Server-side authorization rejects restricted operation | Design-ready where direct service is testable |
 | SEC-RBAC-007 | P0 | Space 2-only user cannot discover/use Space 1-only agent | Cross-space isolation is enforced | Design-ready; final marketplace scope confirmation |
 | SEC-RBAC-008 | P1 | Cross-tenant user cannot discover/use unauthorized tenant agent | Tenant isolation is enforced | Design-ready |
 | SEC-RBAC-009 | P1 | Creator cannot use unassigned MCP/skill | Capability assignment boundary enforced | Design-ready |
 | SEC-RBAC-010 | P1 | Creator cannot consume unapproved arbitrary API | Platform prevents bypass of approved capability model | Design-ready |
 | SEC-RBAC-011 | P1 | Lower-level agent instruction cannot override tenant/pattern governance | Instruction precedence is enforced at runtime | Design-ready |
 | SEC-RBAC-012 | P1 | Tenant prompt cannot override inherited pattern governance | Pattern remains highest applicable rule layer | Design-ready |
-| SEC-RBAC-013 | TBD | Map Agent Creator vs Space Designer vs Agent Owner terminology | Role names resolve to official access model | Dependency |
+| SEC-RBAC-013 | TBD | Map Agent Creator vs Space Designer vs Agent Owner terminology | Space Designer = Agent Creator for current test baseline; Agent Owner terminology still to be reconciled where used | Partially resolved |
 | SEC-RBAC-014 | TBD | Multi-role user receives correct effective permissions | Combined role semantics follow approved model | Dependency |
 
 ---
@@ -300,29 +296,27 @@ These scenarios remain business-level placeholders until the official accessibil
 
 | ID | Pri | End-to-End Journey | Expected Business Outcome | Status |
 |---|---|---|---|---|
-| E2E-001 | P0 | Pattern → Tenant → Agent → Publish → Marketplace → Runtime | Complete governed agent lifecycle succeeds | Design-ready |
+| E2E-001 | P0 | Pattern → Tenant → Agent → Publish → Marketplace → Runtime | Complete governed agent lifecycle succeeds | Design-ready; publish-role mapping pending |
 | E2E-002 | P0 | Pattern inheritance → Tenant subset enablement → Agent uses only permitted capability | Inheritance and enablement boundaries remain intact end-to-end | Design-ready |
-| E2E-003 | P0 | Create Agent → Publish V1 → Marketplace runs V1 | First publication reaches authorized consumers | Design-ready |
-| E2E-004 | P0 | V1 published → Edit draft → Marketplace still V1 → Publish V2 → Marketplace runs V2 | Frozen-version lifecycle is proven | Design-ready |
-| E2E-005 | P0 | Publish private agent → authorized private access → normal marketplace user cannot discover | Private visibility boundary is proven | Dependency: exact private-access rules |
+| E2E-003 | P0 | Create Agent → Publish V1 → Marketplace runs V1 | First publication reaches authorized consumers | Design-ready functionally; publish-role mapping pending |
+| E2E-004 | P0 | V1 published → Edit draft → Marketplace still V1 → Publish V2 → Marketplace runs V2 | Frozen-version lifecycle is proven | Design-ready functionally |
+| E2E-005 | P0 | Publish private agent → authorized private access → normal marketplace user cannot discover | Private visibility boundary is proven | Dependency: exact private-access/publisher roles |
 | E2E-006 | P0 | Publish marketplace agent in Space 1 → Space 1 user can use → Space 2-only user cannot discover/use | Space isolation is proven | Dependency: marketplace scope conflict |
 | E2E-007 | P0 | Open published agent → upload/select source → source-grounded response | Runtime source chain succeeds | Design-ready |
 | E2E-008 | P0 | Open agent → use source → request generated artifact → retrieve file | Full runtime-to-output chain succeeds | Design-ready |
 | E2E-009 | P1 | Connection inherited but access not established → attempt use | Capability remains unavailable with controlled guidance/error | Design-ready |
 | E2E-010 | P1 | Pattern rule conflicts with tenant/agent instruction → execute agent | Higher-level governance wins | Design-ready |
-| E2E-011 | P1 | Member/role assignment → permitted operation → restricted operation | RBAC works through full user journey | Dependency: role matrix |
+| E2E-011 | P1 | Member/role assignment → permitted operation → restricted operation | RBAC works through full user journey | Design-ready against RAM |
 | E2E-012 | TBD | Additional space creation → membership/resource assignment → isolated agent publication/use | Additional-space lifecycle works | Conditional pending Day-1 confirmation |
 
 ---
 
 # 14. Requirement / Design Clarifications to Carry Forward
 
-These items should be resolved before final expected results are frozen.
-
 | ID | Clarification | Impact |
 |---|---|---|
-| CLAR-001 | Official role/access matrix | Determines positive/negative RBAC executions and role ownership of scenarios |
-| CLAR-002 | Agent Creator vs Space Designer vs Agent Owner terminology | Role mapping and test-user design |
+| CLAR-001 | Roles diagram says seven roles while official matrix includes Governance Manager as an eighth role | Role documentation alignment |
+| CLAR-002 | Matrix 1.1 `Navigation (Read-Only)` semantics | Navigation/access expected results |
 | CLAR-003 | Pattern UI is described as read-only while Pattern Tenant designs expose editing | Pattern administration scope |
 | CLAR-004 | Training design shows Low Risk + Research Pattern while engineering scope names Low Risk + SDLC | Test data and expected inheritance |
 | CLAR-005 | Publish UI says tenant Agent Marketplace while engineering rule says marketplace of that space only | Critical marketplace isolation expected result |
@@ -335,24 +329,22 @@ These items should be resolved before final expected results are frozen.
 | CLAR-012 | Exact source extensions and 10MB boundary semantics | Upload boundary cases |
 | CLAR-013 | Generated-file ownership/retention | Privacy and lifecycle cases |
 | CLAR-014 | Detailed Agentic Workflow 2.0, Agent Inventory/Registry and Agent Harness requirements beyond supplied runtime screens | Additional scenario catalogue expansion |
+| CLAR-015 | RAM 6.4 Review agent configuration request — whether this is an active current-scope gate | Agent lifecycle expected flow |
+| CLAR-016 | Mapping among Figma Publish, Private Testing, Marketplace Testing and RAM 6.9 Promote to tenant-shared | P0 publication role/state coverage |
+| CLAR-017 | Token/cost section numbering duplicates section 8 and skips 8.4 | Requirement reference hygiene |
+| CLAR-018 | Multi-role effective permission model | Combined-role RBAC testing |
 
 ---
 
-# 15. Proposed First Detailed Test-Definition Wave
+# 15. P0 Detailed Test-Definition Baseline
 
-Detailed Manual Test Definitions should not be generated uniformly across all 144 catalogue entries. The first wave should focus on the release-critical P0 lifecycle:
+The reconciled catalogue contains **52 P0 business scenarios**. They do not map one-to-one to test definitions: related scenarios share reusable definitions where they form one coherent behaviour.
 
-1. **GOV-TEN-002 / GOV-TEN-003 / GOV-TEN-006 / GOV-TEN-010 / GOV-TEN-011** — tenant, default space, Low Risk assignment, resource enablement and governance.
-2. **BLD-CRT-001 / 002 / 003** — authorized creation, default Low Risk and single-pattern rule.
-3. **BLD-CFG-002 / 003 / 004** — instruction governance and approved capabilities.
-4. **PUB-001 / 002 / 003 / 009 / 010** — unpublished, private, marketplace, frozen release and visibility scope.
-5. **VER-001 / 002 / 003** — V1 → draft changes → V2 lifecycle.
-6. **MKT-001 / 002 / 003 / 004** — discovery and isolation.
-7. **RUN-001 / 002 / 003 / 004** — published-agent runtime.
-8. **SRC-001 / 002 / 003** — upload, privacy and read-only source behaviour.
-9. **GEN-001 / GEN-002** — generation and retrieval.
-10. **SEC-RBAC-005 / 006 / 007** — authorization and isolation once role details arrive.
-11. **E2E-001 through E2E-008** — golden-path regression backbone.
+The current detailed P0 baseline is **32 reusable Manual Test Definitions** with **96 explicit execution variants**.
+
+Explicit P0 coverage includes required Patterns and Pattern rules; rollout tenants/default Spaces; Tenant/Space governance; Agent creation/configuration; private and marketplace publication; frozen V1→V2 versioning; Marketplace discovery; governed runtime/multi-turn; personal sources; generated files; RBAC; Space/Tenant isolation; and P0 E2E journeys.
+
+The 10-check smoke suite remains intentionally smaller than full P0 coverage and is used only as the initial environment/build sanity gate.
 
 ---
 
@@ -360,13 +352,12 @@ Detailed Manual Test Definitions should not be generated uniformly across all 14
 
 This catalogue is a **living test-design index**.
 
-When requirements change:
-
 - Do not silently rewrite an existing scenario's meaning.
-- Update its status/dependency or add a new scenario where business behaviour changes materially.
+- Update status/dependency or add a new scenario where business behaviour changes materially.
 - Preserve IDs once detailed Test Definitions or executions reference them.
 - Resolve `TBD` items only when an authoritative requirement or implemented behaviour is available.
-- Add the future role/access matrix as a separate traceability artifact rather than embedding every role permutation directly into this catalogue.
+- Maintain role permutations in the RBAC/execution artifacts rather than duplicating them here.
+- Recalculate the summary from detailed rows whenever scenarios or priorities change.
 
 ---
 
