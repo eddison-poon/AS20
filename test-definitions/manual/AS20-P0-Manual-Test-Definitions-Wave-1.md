@@ -1,793 +1,320 @@
 # Agent Studio 2.0 — P0 Manual Test Definitions — Wave 1
 
-**Document Status:** Draft v0.1  
+**Document Status:** Draft v0.2 — Reconciled 16 Sep 2026  
 **Priority:** P0 / Release-Critical Baseline  
 **Execution Status:** Design-ready / Not Executed — Awaiting Environment  
 **Parent Catalogue:** `scenarios/Agent-Studio-2.0-Business-Scenario-Catalogue.md`  
 **RBAC Baseline:** `docs/role-access/Agent-Studio-2.0-RBAC-Accessibility-Matrix.md`
 
----
-
 ## 1. Purpose
 
-This package is the first detailed Manual Test Definition baseline for Agent Studio 2.0. It concentrates on the release-critical pre-production lifecycle currently supported by the supplied Figma designs, operating flow and official Roles & Actions Matrix.
+This consolidated Wave 1 baseline contains **32 reusable P0 Manual Test Definitions**. It covers the release-critical pre-production lifecycle from Pattern/Tenant/Space governance through Agent creation, publication, Marketplace/runtime, sources, generated output and isolation. Production deployment beginning with `Request deploy` is excluded.
 
-The package deliberately does **not** expand every catalogue scenario. Wave 1 proves the highest-risk functional chain:
+A Test Definition is reusable; role, tenant, space, state and data permutations belong in the Execution Matrix rather than being duplicated as separate definitions.
 
-**Tenant/Space Governance → Space Designer Agent Creation → Agent Configuration → Same-Space Visibility → Space User Execution → Sources → Generated Output → Isolation / Negative Authorization**
-
-Production deployment beginning with `Request deploy` is excluded from this wave.
-
----
-
-## 2. Test Definition Convention
-
-Each Test Definition contains:
-
-- Test Definition ID.
-- Business Scenario reference.
-- Roles & Actions Matrix reference where applicable.
-- Priority.
-- Principal executing role.
-- Preconditions/test data.
-- Steps.
-- Expected results.
-- Execution variants / negative authorization coverage.
-
-A Test Definition is reusable. Role, tenant, space, environment and test data variations should normally be captured as executions rather than duplicated definitions.
-
----
-
-## 3. Common Test Data
-
-Use the following logical data set; actual IDs/names may be substituted in the environment.
+## 2. Common Test Data
 
 | Data | Baseline |
 |---|---|
 | Tenant A | Training or equivalent active use-case tenant |
 | Tenant B | Second active tenant for isolation checks |
 | Space A | Default Space under Tenant A |
-| Space B | Second space or another independently scoped space where available |
-| Pattern | Low Risk Pattern enabled for Tenant A / Space A |
-| Tenant Owner | User with Tenant Owner only |
-| Space Owner | User with Space Owner only |
+| Space B | Second independently scoped space where available |
+| Patterns | Low Risk and SDLC |
+| Tenant Owner | Role-pure Tenant Owner |
+| Space Owner | Role-pure Space Owner |
 | Space Designer A | Agent Creator assigned to Space A |
-| Space User A | Consumer assigned to Space A |
-| Space User B | Consumer not assigned to Space A / assigned to Space B where available |
-| No-access user | User without applicable Tenant A / Space A entitlement |
-| Approved Skill | Skill enabled/approved for current scope |
-| Unapproved Skill | Skill not assigned/approved for current scope |
-| Approved MCP/Tool | MCP/tool enabled/approved for current scope |
-| Unapproved MCP/Tool | MCP/tool not assigned/approved for current scope |
-| Valid Source | Supported small PDF/TXT/MD file containing known facts |
-| Boundary Source | File at confirmed maximum size once environment rule is verified |
-| Oversize Source | File above confirmed maximum size |
-| Unsupported Source | Unsupported extension |
+| Space User A / A2 | Two consumers assigned to Space A |
+| Space User B | Consumer assigned only to Space B |
+| Approved / Unapproved Skill | Scope-controlled skill test data |
+| Approved / Unapproved MCP | Scope-controlled MCP/tool test data |
+| Valid Source | Supported small file containing known facts |
 
----
+# 3. Pattern / Tenant / Space Governance
 
-# 4. Governance & Space Baseline
+## MTD-PAT-001 — Verify required Patterns exist and are assignable
+**Scenarios:** GOV-PAT-001, GOV-PAT-002  
+**Priority:** P0
+
+**Steps:** Open applicable Pattern catalogue/administration; locate Low Risk and SDLC; inspect identity/status; verify each is available for intended assignment/adoption.
+
+**Expected:** Both required Patterns exist as distinct Patterns and are available according to release configuration. Exact SDLC resources may remain a test-data clarification.
+
+## MTD-PAT-002 — Verify shared Pattern rules govern downstream behaviour
+**Scenarios:** GOV-PAT-005, GOV-TEN-011, RUN-004  
+**Priority:** P0
+
+**Steps:** Establish/identify a known Pattern rule; confirm it is inherited; add a compatible lower-level instruction and execute; then use a controlled lower-level instruction that conflicts with the Pattern rule.
+
+**Expected:** Pattern rules persist and apply. Compatible lower-level instructions work; conflicting Tenant/Agent instructions cannot override higher Pattern governance.
 
 ## MTD-GOV-001 — Verify Low Risk Pattern is enabled for the tenant
-
 **Scenario:** GOV-TEN-003  
 **Matrix Ref:** 4.3  
-**Priority:** P0  
 **Principal Role:** Tenant Owner
 
-### Preconditions
+**Steps:** Open Tenant A pattern configuration; enable/confirm Low Risk; save and reload.
 
-- Tenant A exists and is active.
-- Tenant Owner is assigned to Tenant A.
-- Low Risk Pattern exists.
-
-### Steps
-
-1. Sign in as Tenant Owner.
-2. Open Tenant A configuration.
-3. Navigate to pattern configuration/selection.
-4. Locate Low Risk Pattern.
-5. Enable/assign Low Risk Pattern if not already enabled.
-6. Save the tenant configuration.
-7. Reload/re-enter Tenant A configuration.
-
-### Expected Results
-
-- Tenant Owner can access the applicable tenant configuration.
-- Low Risk Pattern can be enabled by Tenant Owner.
-- Saved pattern assignment persists after reload.
-- The pattern becomes available to the tenant according to the configured scope.
-- No unrelated pattern is enabled implicitly.
-
-### Negative Authorization
-
-- Space Owner, Space Designer and Space User must not be able to enable/disable tenant patterns.
-- If a restricted user attempts direct navigation/service invocation, the action should be rejected rather than merely hidden.
-
----
+**Expected:** Tenant Owner can enable the Pattern; assignment persists; Space Owner/Designer/User cannot change tenant Pattern enablement, including through direct operation where testable.
 
 ## MTD-GOV-002 — Verify tenant controls permitted agent capabilities/types
-
-**Scenario:** GOV-TEN-006 / BLD-CFG-003 / BLD-CFG-004  
+**Scenarios:** GOV-TEN-006, BLD-CFG-003, BLD-CFG-004  
 **Matrix Ref:** 4.4  
-**Priority:** P0  
 **Principal Role:** Tenant Owner
 
-### Steps
+**Steps:** Define/confirm permitted capability set; save; sign in as Space Designer; inspect resources offered during Agent configuration.
 
-1. Sign in as Tenant Owner.
-2. Open Tenant A configuration.
-3. Define/confirm the permitted agent capability/type set.
-4. Save.
-5. Sign in as Space Designer A.
-6. Start/configure an agent in Space A.
-7. Inspect the capabilities/resources offered to the creator.
-
-### Expected Results
-
-- Tenant Owner can define permitted capability/types.
-- Space Designer sees/uses only capabilities allowed by the applicable governance/resource configuration.
-- Unapproved capability must not become usable merely because it exists globally.
-
----
+**Expected:** Tenant Owner controls the permitted set; lower roles cannot expand it; inherited/shared does not automatically mean enabled.
 
 ## MTD-GOV-003 — Verify Tenant Owner creates a space and assigns Space Owner
+**Scenarios:** GOV-SPC-005, GOV-SPC-004  
+**Matrix Ref:** 5.1, 5.2
 
-**Scenario:** GOV-SPC-005 / GOV-SPC-004  
-**Matrix Ref:** 5.1, 5.2  
-**Priority:** P0  
-**Principal Role:** Tenant Owner
+**Steps:** If additional-space creation is enabled, create Space B, assign Space Owner and verify access.
 
-### Preconditions
-
-- Additional-space creation is enabled in the test environment.
-
-### Steps
-
-1. Sign in as Tenant Owner.
-2. Open Tenant A.
-3. Create a new Space B.
-4. Assign a Space Owner to Space B.
-5. Save.
-6. Sign in as the assigned Space Owner.
-7. Open Space B.
-
-### Expected Results
-
-- Tenant Owner can create the space.
-- Tenant Owner can assign/change its Space Owner.
-- Assigned Space Owner can access the space according to role permissions.
-- Other users do not gain membership implicitly unless required by inheritance rules.
-
-### Scope Note
-
-The official matrix confirms the actions exist, but earlier Figma wording around one shared default Space remains a release-scope clarification. If additional spaces are disabled for 28 Sep, record this definition as **Not Applicable — Release Scope** rather than Failed.
-
----
+**Expected:** Tenant Owner can create/assign; Space Owner cannot create Space. If additional Spaces are disabled for the release, record **N/A — Release Scope**.
 
 ## MTD-GOV-004 — Verify Space Owner assigns members and roles
-
 **Scenario:** GOV-SPC-004  
-**Matrix Ref:** 6.3  
-**Priority:** P0  
-**Principal Role:** Space Owner
+**Matrix Ref:** 6.3
 
-### Steps
+**Steps:** Space Owner adds Space Designer and Space User to Space A; save; sign in separately as each.
 
-1. Sign in as Space Owner for Space A.
-2. Open member/role management.
-3. Add Space Designer A to Space A with Space Designer role.
-4. Add Space User A to Space A with Space User role.
-5. Save changes.
-6. Sign in separately as each assigned user.
+**Expected:** Membership/roles persist; only Space Owner receives the 6.3 action under the supplied matrix.
 
-### Expected Results
+## MTD-GOV-005 — Verify rollout tenants, default spaces and mandatory-space protection
+**Scenarios:** GOV-TEN-001, GOV-TEN-002, GOV-SPC-001  
+**Priority:** P0
 
-- Space Owner can add members and assign roles.
-- Membership/role changes persist.
-- Space Designer and Space User receive the access appropriate to their assigned roles.
-- Tenant Owner, Space Designer and Space User must not gain the 6.3 action merely from their other permissions.
+**Steps:** Verify Training, AME, CAIO, CIB, COO, CTO, Cyber, GF, IWPB and UK; confirm each required tenant has its default Space; inspect/attempt supported removal of a mandatory default Space.
 
----
+**Expected:** All required rollout tenants/default Spaces exist and mandatory default Space cannot be removed.
 
-# 5. Agent Creation & Configuration
+# 4. Agent Creation & Configuration
 
 ## MTD-BLD-001 — Create an agent from an enabled pattern
-
-**Scenario:** BLD-CRT-001 / BLD-CRT-002 / BLD-CRT-003  
+**Scenarios:** BLD-CRT-001, BLD-CRT-002, BLD-CRT-003  
 **Matrix Ref:** 6.1  
-**Priority:** P0  
 **Principal Role:** Space Designer
 
-### Preconditions
+**Steps:** Enter assigned Space; start Agent Builder; confirm enabled/default Pattern; create with valid minimum data.
 
-- Space Designer A is assigned to Space A.
-- Low Risk Pattern is enabled for the applicable tenant/space.
+**Expected:** Space Designer can create; Low Risk is default where required; exactly one Pattern is associated; draft belongs to current scope. Tenant Owner, Space Owner and Space User cannot perform 6.1 from those roles alone.
 
-### Steps
+## MTD-BLD-002 — Configure agent instructions within Pattern governance
+**Scenarios:** BLD-CFG-002, GOV-TEN-011, SEC-RBAC-011  
+**Matrix Ref:** 6.2
 
-1. Sign in as Space Designer A.
-2. Enter Space A.
-3. Open Agent Builder.
-4. Start agent creation.
-5. Confirm the enabled/default pattern behaviour.
-6. Create an agent using valid minimum data.
-7. Save/create the draft.
+**Steps:** Configure valid instructions; save/reload; add a controlled instruction conflicting with higher governance and test.
 
-### Expected Results
+**Expected:** Instructions persist but cannot override Pattern/Tenant governance. Non-Designer roles cannot edit solely because they can view.
 
-- Space Designer can initiate agent creation.
-- Low Risk Pattern is the default/pre-selected pattern where required by the release rule.
-- Agent is associated with exactly one pattern.
-- Valid input produces a draft agent.
-- Agent belongs to Space A/current scope.
+## MTD-BLD-003 — Attach approved MCP tool / skill
+**Scenarios:** BLD-CFG-003, BLD-CFG-004, GOV-TEN-010  
+**Matrix Ref:** 6.5
 
-### Negative Authorization
+**Steps:** Select approved Skill and MCP/tool; save/reload; test use where practical.
 
-Repeat the creation-entry check using Tenant Owner, Space Owner and Space User.
+**Expected:** Approved resources persist and work only when required access is established; Pattern inheritance does not carry credentials.
 
-Expected: none of these roles can perform action 6.1 unless they also hold Space Designer through an explicitly supported multi-role model.
+## MTD-BLD-004 — Prevent unapproved MCP / skill / API use
+**Scenarios:** BLD-CFG-003, BLD-CFG-004, GOV-TEN-010, SEC-RBAC-009, SEC-RBAC-010  
+**Matrix Ref:** 4.4, 6.5
 
----
+**Steps:** Search/select an unapproved resource; attempt direct submission/invocation where possible.
 
-## MTD-BLD-002 — Configure agent instructions within pattern governance
+**Expected:** Unapproved resource cannot be saved/used; direct bypass is rejected; arbitrary unapproved API access is not introduced.
 
-**Scenario:** BLD-CFG-002 / SEC-RBAC-011  
-**Matrix Ref:** 6.2  
-**Priority:** P0  
-**Principal Role:** Space Designer
+# 5. Same-Space Visibility & Editing
 
-### Steps
+## MTD-ACC-001 — Verify permitted roles can view same-space agents
+**Scenarios:** SEC-RBAC-003, SEC-RBAC-004  
+**Matrix Ref:** 6.6
 
-1. Open the draft agent as Space Designer.
-2. Configure valid agent instructions.
-3. Save.
-4. Reload the agent.
-5. Confirm instructions persist.
-6. Add an instruction that conflicts with a known Pattern/Tenant rule.
-7. Save and execute/test the draft where supported.
+**Steps:** Test Tenant Owner, Space Owner, Space Designer and Space User separately against Agent A.
 
-### Expected Results
-
-- Space Designer can configure the agent.
-- Valid instructions persist.
-- Agent-specific instructions do not override higher-priority governance.
-- Runtime behaviour remains within inherited Pattern/Tenant restrictions.
-
-### Negative Authorization
-
-Tenant Owner, Space Owner and Space User must not be able to edit agent configuration under 6.2/6.7 solely because they can view the agent.
-
----
-
-## MTD-BLD-003 — Attach approved MCP tool / skill to an agent
-
-**Scenario:** BLD-CFG-003 / BLD-CFG-004  
-**Matrix Ref:** 6.5  
-**Priority:** P0  
-**Principal Role:** Space Designer
-
-### Steps
-
-1. Open draft agent as Space Designer.
-2. Open Skills/Tools configuration.
-3. Select an approved Skill.
-4. Select an approved MCP/tool.
-5. Save.
-6. Reload the agent.
-7. Test the agent using the selected capability where practical.
-
-### Expected Results
-
-- Approved resources are selectable.
-- Selection persists.
-- Agent can use the resources according to their configured access.
-- No credentials are exposed through pattern inheritance.
-
----
-
-## MTD-BLD-004 — Prevent use of unapproved MCP / skill
-
-**Scenario:** BLD-CFG-003 / BLD-CFG-004 / SEC-RBAC-009 / SEC-RBAC-010  
-**Matrix Ref:** 6.5 plus governance 4.4  
-**Priority:** P0  
-**Principal Role:** Space Designer
-
-### Steps
-
-1. Open draft agent as Space Designer.
-2. Inspect Skills/Tools available for attachment.
-3. Search for an unapproved/unassigned Skill or MCP.
-4. Attempt selection if the UI exposes it.
-5. Where technically possible, attempt direct service/API submission of an unapproved resource identifier.
-
-### Expected Results
-
-- Unapproved resource is absent, disabled or clearly unavailable.
-- Agent cannot save/use an unapproved resource.
-- Direct invocation must be rejected by authorization/governance controls.
-- No arbitrary unapproved API access is introduced.
-
----
-
-# 6. Same-Space Visibility & Editing
-
-## MTD-ACC-001 — Verify permitted roles can view agents within the same space
-
-**Scenario:** SEC-RBAC-003 / SEC-RBAC-004  
-**Matrix Ref:** 6.6  
-**Priority:** P0  
-**Principal Roles:** Tenant Owner, Space Owner, Space Designer, Space User
-
-### Preconditions
-
-- Agent A exists in Space A.
-- Each test user has legitimate Space A scope where required.
-
-### Steps
-
-1. Sign in as each role separately.
-2. Navigate to the applicable agent listing/marketplace/view.
-3. Locate Agent A.
-4. Open its permitted view.
-
-### Expected Results
-
-- All four roles listed as Yes for 6.6 can view agents within the same space.
-- View permission does not automatically provide edit or execute permission.
-- AH Platform Admin, AH Engineer, Viewer/Requestor and Governance Manager do not receive 6.6 access from those roles alone.
-
----
+**Expected:** All four can view within same Space; view does not imply edit/run. Platform Admin, Engineer, Viewer/Requestor and Governance Manager do not gain 6.6 from those roles alone.
 
 ## MTD-ACC-002 — Verify only Space Designer can edit same-space agent
+**Scenarios:** SEC-RBAC-003, SEC-RBAC-005, SEC-RBAC-006  
+**Matrix Ref:** 6.7
 
-**Scenario:** SEC-RBAC-003 / SEC-RBAC-005 / SEC-RBAC-006  
-**Matrix Ref:** 6.7  
-**Priority:** P0  
-**Principal Role:** Space Designer
+**Steps:** Designer edits and saves; repeat as Tenant Owner, Space Owner and Space User; attempt direct unauthorized edit.
 
-### Steps
+**Expected:** Designer succeeds; other roles/direct unauthorized requests are denied and do not alter the Agent.
 
-1. Open Agent A as Space Designer.
-2. Modify an editable configuration value and save.
-3. Confirm persistence.
-4. Repeat edit attempt as Tenant Owner.
-5. Repeat as Space Owner.
-6. Repeat as Space User.
-7. Attempt direct edit endpoint/request for at least one unauthorized role where possible.
-
-### Expected Results
-
-- Space Designer can edit and save.
-- Tenant Owner, Space Owner and Space User cannot edit under the supplied role matrix.
-- Unauthorized direct request is rejected.
-- Unauthorized attempts do not alter the agent.
-
----
-
-# 7. Agent Runtime
+# 6. Agent Runtime
 
 ## MTD-RUN-001 — Space Designer executes a same-space agent
+**Scenarios:** RUN-001, RUN-002  
+**Matrix Ref:** 6.8, 7.1
 
-**Scenario:** RUN-001 / RUN-002  
-**Matrix Ref:** 6.8, 7.1  
-**Priority:** P0  
-**Principal Role:** Space Designer
-
-### Steps
-
-1. Sign in as Space Designer A.
-2. Open a runnable Agent A in Space A.
-3. Start a new session.
-4. Submit a valid prompt.
-5. Wait for completion.
-
-### Expected Results
-
-- Agent opens successfully.
-- Prompt is accepted.
-- Agent executes.
-- Response is displayed.
-- Execution remains within permitted agent capabilities/governance.
-- Execution metadata is displayed where supported.
-
----
+**Expected:** Designer opens/runs permitted Agent successfully within governance; runtime metadata appears where supported.
 
 ## MTD-RUN-002 — Space User executes a same-space agent
+**Scenarios:** RUN-001, RUN-002, SEC-RBAC-004  
+**Matrix Ref:** 6.8, 7.1
 
-**Scenario:** RUN-001 / RUN-002 / SEC-RBAC-004  
-**Matrix Ref:** 6.8, 7.1  
-**Priority:** P0  
-**Principal Role:** Space User
-
-### Steps
-
-1. Sign in as Space User A.
-2. Locate/open Agent A within Space A through the permitted discovery path.
-3. Start a session.
-4. Submit a valid prompt.
-5. Wait for completion.
-
-### Expected Results
-
-- Space User can discover/view the same-space agent as permitted.
-- Space User can execute it.
-- Space User cannot edit the agent configuration.
-- Successful response is returned.
-
----
+**Expected:** Space User discovers/views/runs permitted Agent but cannot edit configuration.
 
 ## MTD-RUN-003 — Prevent Tenant Owner / Space Owner from executing agent
+**Scenarios:** SEC-RBAC-005, SEC-RBAC-006  
+**Matrix Ref:** 6.8, 7.1
 
-**Scenario:** SEC-RBAC-005 / SEC-RBAC-006  
-**Matrix Ref:** 6.8, 7.1  
-**Priority:** P0  
-**Principal Negative Roles:** Tenant Owner, Space Owner
+**Steps:** Attempt execution as Tenant Owner and Space Owner, including direct invocation where possible.
 
-### Steps
-
-1. Sign in as Tenant Owner with visibility to Agent A.
-2. Open/view Agent A.
-3. Attempt to run/execute the agent.
-4. Repeat as Space Owner.
-5. Where possible, attempt direct runtime/service invocation.
-
-### Expected Results
-
-- Both roles may view Agent A under 6.6 when within same space.
-- Neither role can execute Agent A under 6.8/7.1 unless separately granted Space Designer/User through a supported multi-role model.
-- UI prevents execution appropriately.
-- Direct invocation is rejected.
-- No execution record is created from denied attempts.
-
----
+**Expected:** They may view under 6.6 but cannot run from those roles alone; no execution record is created from denied attempts.
 
 ## MTD-RUN-004 — Verify own execution output/history isolation
+**Scenario:** RUN-007  
+**Matrix Ref:** 7.2
 
-**Scenario:** RUN-007 / SEC-RBAC-004  
-**Matrix Ref:** 7.2  
-**Priority:** P0  
-**Principal Roles:** Space Designer, Space User
+**Steps:** User A executes and views own history; User A2 attempts to locate/access it, including direct ID where feasible.
 
-### Steps
+**Expected:** User can view own outputs/history; another user cannot access protected history merely through same-Space membership.
 
-1. Execute Agent A as Space User A and record the execution/session.
-2. Open own execution outputs/history as Space User A.
-3. Confirm the execution is present.
-4. Sign in as another Space User in the same space.
-5. Attempt to locate/access Space User A's execution output/history.
-6. Repeat equivalent check between Space Designer and Space User where relevant.
+## MTD-RUN-005 — Verify multi-turn runtime under inherited governance
+**Scenarios:** RUN-003, RUN-004  
+**Priority:** P0
 
-### Expected Results
+**Steps:** Start session; submit prompt establishing known context; submit context-dependent follow-up; then a controlled governance-conflicting prompt.
 
-- User can view their own execution outputs/history.
-- Another user cannot access private execution history merely because they share the space.
-- Direct URL/identifier access to another user's protected execution is rejected where applicable.
+**Expected:** Appropriate session context is retained; responses remain within inherited governance/permitted capabilities; conversation context cannot override higher restrictions.
 
----
-
-# 8. Runtime Sources
+# 7. Runtime Sources
 
 ## MTD-SRC-001 — Upload and use a valid personal source
+**Scenarios:** SRC-001, SRC-003, E2E-007
 
-**Scenario:** SRC-001 / E2E-007  
-**Priority:** P0  
-**Principal Role:** Space User or Space Designer
+**Steps:** Upload valid source; select it; ask a source-grounded question.
 
-### Steps
-
-1. Open Agent A runtime.
-2. Select Add Source.
-3. Upload Valid Source containing known test facts.
-4. Confirm upload succeeds.
-5. Select the uploaded source.
-6. Ask a question whose answer is contained in the source.
-
-### Expected Results
-
-- Supported source uploads successfully.
-- Source appears in the user's source list.
-- Source can be selected.
-- Agent execution can use the selected source as runtime context.
-- Original uploaded file is not modified by the agent.
-
----
+**Expected:** Upload/select/use succeeds; Agent can read source at runtime; original uploaded source is not modified.
 
 ## MTD-SRC-002 — Verify personal source is isolated from another user
+**Scenario:** SRC-002
 
-**Scenario:** SRC-002  
-**Priority:** P0  
-**Principal Roles:** Space User A and second user
+**Steps:** User A uploads source; User A2 inspects sources and attempts direct access.
 
-### Steps
-
-1. Upload Personal Source as Space User A.
-2. Confirm it appears for Space User A.
-3. Sign out.
-4. Sign in as another user with access to the same agent/space.
-5. Inspect available sources.
-6. Attempt direct access using any known source identifier/URL where feasible.
-
-### Expected Results
-
-- Personal Source is not visible to the second user.
-- Second user cannot select/read/download the source.
-- Direct access is denied.
-
----
+**Expected:** Other user cannot see/select/read/download source; direct access denied.
 
 ## MTD-SRC-003 — Verify source selection changes runtime context
+**Scenarios:** SRC-009, SRC-010, SRC-012
 
-**Scenario:** SRC-009 / SRC-010 / SRC-012  
-**Priority:** P0  
-**Principal Role:** Space User or Space Designer
+**Steps:** Select distinguishable A+B+C; test context; deselect B and retest; add/select D and retest.
 
-### Test Data
+**Expected:** Active context follows selected set and no cross-user source is introduced.
 
-Use sources A, B and C containing distinguishable known facts.
+# 8. Generated Output
 
-### Steps
+## MTD-GEN-001 — Generate output file
+**Scenarios:** GEN-001, E2E-008
 
-1. Add/select Sources A + B + C.
-2. Ask a prompt requiring information from all selected sources.
-3. Deselect Source B.
-4. Submit a controlled follow-up/new-session prompt designed to test whether B remains active context.
-5. Add/select Source D if available and repeat.
+**Expected:** Valid request creates a new artifact in Generated Files associated with permitted session/user.
 
-### Expected Results
+## MTD-GEN-002 — Retrieve and validate generated output
+**Scenarios:** GEN-002, GEN-009
 
-- Selected sources participate in the active runtime context according to product behaviour.
-- Deselected source is no longer treated as selected source context.
-- Source-selection UI state matches the execution context.
-- No cross-user source is introduced.
+**Steps:** Retrieve/open artifact; validate basic structure and content against request/known source facts.
 
----
+**Expected:** Authorized retrieval succeeds; file is structurally valid and materially corresponds to request.
 
-# 9. Generated Output
-
-## MTD-GEN-001 — Generate an output file from an agent session
-
-**Scenario:** GEN-001 / E2E-008  
-**Priority:** P0  
-**Principal Role:** Space User or Space Designer
-
-### Steps
-
-1. Open Agent A and start a valid session.
-2. Provide/select source context where needed.
-3. Ask the agent to generate a supported shareable output file.
-4. Wait for completion.
-5. Inspect Generated Files.
-
-### Expected Results
-
-- Generation request is accepted.
-- Agent completes the request successfully.
-- A new artifact appears in Generated Files.
-- Generated artifact is associated with the current permitted session/user.
-- Existing generated artifacts are not corrupted.
-
----
-
-## MTD-GEN-002 — Retrieve and validate generated output file
-
-**Scenario:** GEN-002 / GEN-009  
-**Priority:** P0  
-**Principal Role:** Space User or Space Designer
-
-### Steps
-
-1. Locate the artifact created by MTD-GEN-001.
-2. Download/retrieve it.
-3. Open the file using an appropriate application/viewer.
-4. Check basic structure/readability.
-5. Compare content against the requested task and known source facts.
-
-### Expected Results
-
-- Authorized user can retrieve the artifact.
-- File opens successfully and is structurally valid.
-- File materially corresponds to the requested output.
-- Where source-grounded generation was requested, output does not contradict the controlled known source facts.
-
----
-
-# 10. Space / Tenant Isolation
+# 9. Space / Tenant Isolation
 
 ## MTD-ISO-001 — Prevent cross-space agent visibility/access
+**Scenarios:** MKT-004, SEC-RBAC-007, E2E-006
 
-**Scenario:** MKT-004 / SEC-RBAC-007 / E2E-006  
-**Priority:** P0  
-**Principal Roles:** Space User A / Space User B
+**Steps:** Space A user confirms access; Space B-only user searches, opens direct URL and attempts runtime invocation.
 
-### Preconditions
-
-- Agent A belongs to Space A.
-- Space User A is authorized for Space A.
-- Space User B is not authorized for Space A.
-
-### Steps
-
-1. Sign in as Space User A and confirm Agent A is visible/usable.
-2. Sign out and sign in as Space User B.
-3. Search/browse for Agent A.
-4. Attempt direct navigation to Agent A using known identifier/URL where feasible.
-5. Attempt runtime invocation where technically possible.
-
-### Expected Results
-
-- Space User A can access Agent A.
-- Space User B cannot discover Agent A through normal same-space discovery.
-- Direct access/invocation by Space User B is rejected.
-- No Agent A data/configuration/session information is leaked.
-
-### Clarification
-
-The official matrix says `View agents within the same space`; this strongly supports space isolation. The exact relationship to Figma's tenant marketplace wording remains open and should be confirmed before marketplace-publication expected results are frozen.
-
----
+**Expected:** Same-Space access succeeds; cross-Space discovery/direct access/invocation denied with no data leakage. Exact Marketplace wording remains clarification.
 
 ## MTD-ISO-002 — Prevent cross-tenant agent access
+**Scenarios:** MKT-004, SEC-RBAC-008
 
-**Scenario:** MKT-004 / SEC-RBAC-008  
-**Priority:** P0  
-**Principal Roles:** Tenant A user / Tenant B user
+**Expected:** Tenant B-only user cannot discover/execute Tenant A restricted Agent; direct invocation denied.
 
-### Steps
+# 10. Publication, Marketplace & Versioning
 
-1. Confirm Agent A is available to an authorized Tenant A / Space A consumer.
-2. Sign in as a user scoped only to Tenant B.
-3. Search/browse for Agent A.
-4. Attempt direct access/invocation where feasible.
+The functional behaviours below are P0. Exact role mapping among Figma `Publish`, `Private Testing`, `Marketplace Testing` and RAM 6.9 `Promote to tenant-shared` remains open.
 
-### Expected Results
+## MTD-PUB-001 — Unpublished draft unavailable to normal consumer
+**Scenario:** PUB-001
 
-- Tenant B-only user cannot discover or execute Tenant A's restricted agent.
-- Direct invocation is rejected.
-- Tenant/agent metadata is not improperly exposed.
-
----
-
-# 11. Publication / Marketplace — Controlled Placeholder Definitions
-
-The Figma flow clearly includes **Publish → Private Testing / Marketplace Testing**, but the official Roles & Actions Matrix does not yet provide an exact equivalent pre-production publish action. Matrix 6.9 states **Tenant Owner: Promote an agent to tenant-shared**.
-
-For this reason, publication is retained as P0 functional coverage but role ownership is not frozen until product clarification.
-
-## MTD-PUB-001 — Unpublished draft is unavailable to normal consumer
-
-**Scenario:** PUB-001  
-**Priority:** P0  
-**Role:** Space Designer creates draft; Space User validates consumer visibility
-
-### Steps
-
-1. Space Designer creates/configures Agent A but does not perform Publish/Promote action.
-2. Sign in as Space User A.
-3. Search the normal consumer discovery path for Agent A.
-4. Attempt direct consumer runtime access if an identifier is known.
-
-### Expected Results
-
-- Draft is not exposed as a generally consumable marketplace/shared agent.
-- Direct consumer invocation of an unpublished/non-shared draft is rejected unless the product explicitly supports a separate authorized testing path.
-
----
+**Expected:** Draft is not exposed as generally consumable; direct consumer invocation is rejected unless a separate authorized draft-testing path is explicitly supported.
 
 ## MTD-PUB-002 — Publish/promote agent to permitted consumer scope
+**Scenarios:** PUB-003, PUB-010  
+**Matrix Ref:** Candidate 6.9  
+**Role:** TBD
 
-**Scenario:** PUB-003 / PUB-010  
-**Matrix Ref:** Candidate mapping 6.9  
-**Priority:** P0  
-**Role:** **TBD pending clarification**
+**Expected:** Valid Agent/version transitions to intended shared/Marketplace state; visibility changes only after success; scope is restricted; frozen published version is used.
 
-### Expected Functional Outcome
+## MTD-PUB-003 — Verify Private Testing publication and visibility
+**Scenarios:** PUB-002, MKT-003, E2E-005  
+**Role:** TBD pending final Publish mapping
 
-- A valid approved agent/version can transition from creator-only/testing state to the intended shared/marketplace state.
-- Consumer visibility changes only after the successful transition.
-- Visibility is limited to the intended space/tenant scope.
-- Published/shared runtime uses the intended frozen version.
+**Steps:** Publish Agent A using Private Testing; verify authorized private path; sign in as normal Marketplace consumer and search/access Agent A.
 
-### Execution Status
+**Expected:** Frozen private version created; intended private access succeeds; general Marketplace consumer cannot discover/use it.
 
-**Blocked for role-specific expected result — clarification required.**
+## MTD-VER-001 — Verify frozen release and V1 → draft → V2 lifecycle
+**Scenarios:** PUB-009, VER-001, VER-002, VER-003, E2E-004
 
-Do not fail the product solely because the Figma Publish control and matrix 6.9 terminology differ; first establish the intended mapping.
+**Steps:** Publish V1 and record identifying behaviour; edit draft without publishing; consumer executes again; publish V2; consumer executes again.
 
----
+**Expected:** V1 is frozen; draft edits do not alter V1; runtime remains V1 until successful V2 publish; thereafter consumer receives V2.
 
-# 12. Wave 1 End-to-End Regression Definitions
+## MTD-MKT-001 — Verify authorized Marketplace discovery after publication
+**Scenarios:** MKT-001, MKT-002
+
+**Steps:** Authorized consumer opens Marketplace; publish/share Agent A to intended state; refresh/re-enter; locate/open Agent A.
+
+**Expected:** Marketplace contains only permitted set; successful publication makes Agent A discoverable only in intended scope; listing opens correct published Agent/version.
+
+# 11. End-to-End Regression Definitions
 
 ## MTD-E2E-001 — Governed agent build and consumption
+**Scenarios:** E2E-001, E2E-002, E2E-003
 
-**Scenario:** E2E-001 / E2E-002 / E2E-003  
-**Priority:** P0
+**Flow:** Tenant governance → Space roles → Designer creates/configures → approved capability → unapproved capability denied → applicable publish/share → Space User discovers/runs → governance enforced.
 
-### Flow
+## MTD-E2E-002 — Runtime with personal source and generated artifact
+**Scenarios:** E2E-007, E2E-008
 
-1. Tenant Owner enables Low Risk Pattern / permitted capabilities.
-2. Tenant Owner creates/validates required space and Space Owner assignment.
-3. Space Owner assigns Space Designer and Space User.
-4. Space Designer creates Agent A from enabled pattern.
-5. Space Designer configures instructions and approved tools/skills.
-6. Validate unauthorized resources cannot be attached.
-7. Complete applicable publish/share transition when clarified.
-8. Space User discovers/views Agent A within permitted scope.
-9. Space User executes Agent A.
-10. Confirm successful response and governance enforcement.
+**Flow:** User opens Agent → uploads/selects source → source-grounded response → generated artifact → retrieve/open → second user cannot access first user's personal source.
 
-### Expected Result
+# 12. Coverage Summary
 
-The complete governed lifecycle succeeds with each action performed only by an authorized role and with no scope leakage.
-
----
-
-## MTD-E2E-002 — Agent runtime with personal source and generated artifact
-
-**Scenario:** E2E-007 / E2E-008  
-**Priority:** P0
-
-### Flow
-
-1. Space User opens permitted Agent A.
-2. Upload a valid personal source.
-3. Select the source.
-4. Ask a source-grounded question.
-5. Validate response against known source facts.
-6. Request a shareable output file.
-7. Retrieve/open the generated artifact.
-8. Sign in as a second user and verify the first user's personal source is not exposed.
-
-### Expected Result
-
-Source upload, source-aware execution, output generation and user privacy operate correctly through one complete runtime journey.
-
----
-
-# 13. Wave 1 Coverage Summary
-
-| Area | Test Definitions |
+| Area | Definitions |
 |---|---:|
-| Governance / Space | 4 |
+| Pattern / Tenant / Space Governance | 7 |
 | Agent Build / Configuration | 4 |
 | Same-Space Access / Editing | 2 |
-| Runtime | 4 |
+| Runtime | 5 |
 | Sources | 3 |
 | Generated Files | 2 |
 | Space / Tenant Isolation | 2 |
-| Publication Placeholders | 2 |
+| Publication / Marketplace / Versioning | 5 |
 | E2E Regression | 2 |
-| **Total** | **25** |
+| **Total** | **32** |
 
-These 25 definitions intentionally cover substantially more than 25 executions because authorization and scope variants are attached to reusable definitions.
+The **32 definitions** cover the reconciled **52 P0 business scenarios** through reuse; they are expanded into **96 explicit execution variants** in the Execution Matrix.
 
----
+# 13. Execution Status Values
 
-# 14. Execution Status Values
+- **Design-ready**
+- **Not Executed — Awaiting Environment**
+- **Blocked — Requirement Clarification**
+- **Pass / Fail**
+- **Blocked — Environment**
+- **Not Applicable — Release Scope**
 
-Use:
+# 14. Current Follow-Up
 
-- **Design-ready** — definition can be reviewed now.
-- **Not Executed — Awaiting Environment** — expected default before AS2.0 environment is ready.
-- **Blocked — Requirement Clarification** — expected result cannot yet be frozen.
-- **Pass**.
-- **Fail**.
-- **Blocked — Environment**.
-- **Not Applicable — Release Scope**.
-
----
-
-# 15. Immediate Follow-Up
-
-After Wave 1 review:
-
-1. Resolve Publish/Promote/Marketplace role mapping.
-2. Confirm whether additional spaces are enabled for the 28 Sep release.
-3. Confirm exact source file extensions and 10MB boundary semantics.
-4. Expand P1 definitions for field validation, sessions, marketplace search/filter, version metadata and controlled failures.
-5. Build an execution sheet/matrix that maps the 25 reusable definitions to actual role + tenant + space combinations.
-6. Select the compact smoke subset for each deployment/build.
-
----
+1. Resolve Publish / Private Testing / Marketplace Testing / RAM 6.9 mapping.
+2. Confirm additional-Space release scope.
+3. Confirm source extensions and 10MB boundary semantics.
+4. Confirm generated-file ownership/retention.
+5. Confirm multi-role effective permissions.
+6. Expand P1 detailed definitions after P0 baseline review.
 
 **End of Document**
