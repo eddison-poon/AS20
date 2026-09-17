@@ -1,13 +1,13 @@
 # Agent Studio 2.0 — P0 Execution Matrix — Wave 1
 
-**Document Status:** Draft v0.2 — Reconciled 16 Sep 2026  
+**Document Status:** Draft v0.3 — Updated 17 Sep 2026 after business walkthrough  
 **Execution Status:** Not Executed — Awaiting Environment  
 **Test Definitions:** `test-definitions/manual/AS20-P0-Manual-Test-Definitions-Wave-1.md`  
 **RBAC Baseline:** `docs/role-access/Agent-Studio-2.0-RBAC-Accessibility-Matrix.md`
 
 ## 1. Purpose
 
-This consolidated matrix expands the **32 reusable P0 Manual Test Definitions** into **96 explicit execution variants**. It records who executes what, in which scope/state, and whether the operation is expected to be allowed or denied.
+This consolidated matrix expands the **35 reusable P0 Manual Test Definitions** into **101 explicit functional execution variants**, plus **2 dedicated E2E regression execution variants**. The resulting AS20 dashboard-managed baseline is **103 execution variants**. It records who executes what, in which scope/state, and whether the operation is expected to be allowed or denied.
 
 Expected access: **ALLOW**, **DENY**, **VIEW ONLY**, **TBD**, or **N/A**.
 
@@ -63,6 +63,11 @@ Prefer role-pure accounts for RBAC validation. Multi-role effective-permission t
 | EX-BLD-002 | MTD-BLD-001 | 6.1 | U-TO-A | Space A | DENY | Cannot create Agent |
 | EX-BLD-003 | MTD-BLD-001 | 6.1 | U-SO-A | Space A | DENY | Cannot create Agent |
 | EX-BLD-004 | MTD-BLD-001 | 6.1 | U-SU-A1 | Space A | DENY | Cannot create Agent |
+| EX-BLD-013 | MTD-BLD-005 | 6.1 | U-SD-A | Natural-language idea | ALLOW | Assisted creation starts from supplied idea |
+| EX-BLD-014 | MTD-BLD-005 | 6.1 | U-SD-A | Builder follow-up | ALLOW | Focused required setup information collected |
+| EX-BLD-015 | MTD-BLD-006 | 6.1 | U-SD-A | Start from scratch / valid data | ALLOW | One valid draft Agent created |
+| EX-BLD-016 | MTD-BLD-006 | 6.1 | U-SD-A | Start from scratch / missing required data | DENY invalid create | Required-field validation prevents invalid draft |
+| EX-BLD-017 | MTD-BLD-007 | 6.1 | U-SD-A | Creation in progress → Cancel | ALLOW cancel | No unintended Agent/draft created |
 | EX-BLD-005 | MTD-BLD-002 | 6.2 | U-SD-A | Agent A | ALLOW | Configure Agent |
 | EX-BLD-006 | MTD-BLD-002 | 6.2 | U-TO-A | Agent A | DENY | Cannot configure |
 | EX-BLD-007 | MTD-BLD-002 | 6.2 | U-SO-A | Agent A | DENY | Cannot configure |
@@ -165,7 +170,16 @@ Prefer role-pure accounts for RBAC validation. Multi-role effective-permission t
 | EX-MKT-003 | MTD-MKT-001 | U-SU-A1 | Agent A listing | ALLOW | Correct version opens |
 | EX-MKT-004 | MTD-MKT-001 + MTD-ISO-001 | U-SU-B | Agent A | DENY | Unauthorized listing absent |
 
-# 11. E2E Execution Chains
+# 11. Dedicated E2E Regression Executions
+
+| Exec ID | Definition | User / Role | Flow | Expected | Key Result |
+|---|---|---|---|---|---|
+| EX-E2E-001 | MTD-E2E-001 | Governed role chain | Governed Build-to-Run | ALLOW/DENY per step | Full governed creation-to-consumption journey completes with boundaries enforced |
+| EX-E2E-002 | MTD-E2E-002 | U-SU-A1 + isolation user | Runtime Source-to-Artifact | ALLOW owner / DENY other user | Source-grounded runtime creates retrievable artifact without cross-user leakage |
+
+These two variants are dedicated regression executions. They may later be selected into a separate Regression bundle and executed across multiple environments without duplicating their MTDs.
+
+# 12. E2E Reference Chains
 
 **E2E-X01 — Governed Build-to-Run:** Tenant Owner governance → Space Owner role assignment → Designer build/configure → approved capability → unapproved capability denied → publish/share TBD → Space User view/run → Tenant/Space Owner run denied.
 
@@ -177,23 +191,25 @@ Prefer role-pure accounts for RBAC validation. Multi-role effective-permission t
 
 **E2E-X05 — Private Publication Boundary:** Publish Private Testing → authorized private access → normal Marketplace consumer cannot discover/use.
 
-# 12. Execution Count
+The E2E-X01..X05 chains are traceability/reference flows. They reuse functional variants and are not additional dashboard cases beyond EX-E2E-001 and EX-E2E-002.
+
+# 13. Execution Count
 
 | Area | Planned Executions |
 |---|---:|
 | Pattern / Governance / Space | 21 |
-| Agent Build / Configuration | 12 |
+| Agent Build / Configuration | 17 |
 | Visibility / Edit | 11 |
 | Runtime | 14 |
 | Sources | 8 |
 | Generated Files | 5 |
 | Space / Tenant Isolation | 7 |
 | Publication / Marketplace / Version | 18 |
-| **Total explicit execution variants** | **96** |
+| **Functional execution variants** | **101** |
+| Dedicated E2E regression variants | **2** |
+| **Dashboard-managed execution variants** | **103** |
 
-E2E chains reuse the explicit variants and are not double-counted.
-
-# 13. Recommended Smoke Subset
+# 14. Recommended Smoke Subset
 
 | Smoke ID | Execution | Reason |
 |---|---|---|
@@ -210,11 +226,11 @@ E2E chains reuse the explicit variants and are not double-counted.
 
 Publication/share is inserted between SMK-04 and SMK-05 once exact state/role mapping is confirmed.
 
-# 14. Evidence Expectations
+# 15. Evidence Expectations
 
 Record Execution ID, build/environment, tester/user/role, Tenant/Space, Agent/version, actual result, Pass/Fail/Blocked/N/A, screenshot/recording, request/execution ID, authorization service response where available, and defect ID. For DENY cases, prove the protected operation did not occur rather than only showing a hidden button.
 
-# 15. Current Clarifications
+# 16. Current Clarifications
 
 1. Publish / Private Testing / Marketplace Testing / RAM 6.9 mapping.
 2. Additional-Space release scope.
