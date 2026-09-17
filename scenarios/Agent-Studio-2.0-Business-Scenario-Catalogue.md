@@ -1,6 +1,6 @@
 # Agent Studio 2.0 — Business Scenario Catalogue
 
-**Document Status:** Draft v0.2 — Reconciled 16 Sep 2026  
+**Document Status:** Draft v0.3 — Updated 17 Sep 2026 after business walkthrough  
 **Release Context:** Phase 1a — New Ideation, target 28 Sep 2026  
 **Parent Strategy:** `docs/strategy/Agent-Studio-2.0-Functional-Test-Strategy.md`  
 **Purpose:** Define the business-level functional scenario inventory from which detailed Manual Test Definitions, RBAC executions, smoke suites and regression suites will be derived.
@@ -40,13 +40,13 @@ The role/access matrix is therefore an execution and authorization dimension wit
 
 ---
 
-## 3. Scenario Summary — Reconciled
+## 3. Scenario Summary — Updated 17 Sep 2026
 
 | Capability | P0 | P1 | P2 / TBD | Total |
 |---|---:|---:|---:|---:|
 | Foundation / Pattern & Tenant Governance | **10** | **14** | **6** | **30** |
 | Agent Studio Homepage & Navigation | 0 | 3 | 3 | 6 |
-| Agent Builder & Configuration | **6** | **11** | **3** | 20 |
+| Agent Builder & Configuration | **11** | **6** | **3** | 20 |
 | Publication & Versioning | **8** | **7** | 2 | **17** |
 | Agent Marketplace | 4 | 6 | 4 | 14 |
 | Agent Runtime / Harness | 4 | 9 | 2 | 15 |
@@ -54,7 +54,9 @@ The role/access matrix is therefore an execution and authorization dimension wit
 | Generated Files | 2 | 7 | 1 | 10 |
 | Cross-Cutting RBAC / Isolation | 7 | 5 | 2 | 14 |
 | End-to-End Journeys | 8 | 3 | 1 | 12 |
-| **Total** | **52** | **75** | **26** | **153** |
+| **Total** | **57** | **70** | **26** | **153** |
+
+> 17 Sep walkthrough change: BLD-CRT-004 through BLD-CRT-008 were raised from P1 to P0. Total scenario inventory remains 153.
 
 > Counts are planning counts, not a commitment to 153 manual test cases. Related scenarios are intentionally covered by reusable Test Definitions and role/scope execution variants.
 
@@ -131,11 +133,11 @@ The role/access matrix is therefore an execution and authorization dimension wit
 | BLD-CRT-001 | P0 | Authorized Space Designer enters assigned space and starts agent creation | Creator can create only within assigned scope | Design-ready; Space Designer = Agent Creator |
 | BLD-CRT-002 | P0 | Low Risk Pattern is default during agent creation | Low Risk is pre-selected/default as required | Design-ready; UI location TBD |
 | BLD-CRT-003 | P0 | Agent is associated with exactly one pattern | Multiple simultaneous patterns cannot be assigned to one agent | Design-ready |
-| BLD-CRT-004 | P1 | Create agent through natural-language idea | Builder captures idea and initiates assisted creation | Design-ready |
-| BLD-CRT-005 | P1 | Builder asks focused follow-up question(s) | Required setup information is collected before draft creation | Design-ready |
-| BLD-CRT-006 | P1 | Create agent from scratch | Valid name/details produce a new draft agent | Design-ready |
-| BLD-CRT-007 | P1 | Validate required creation fields | Missing required data prevents invalid draft creation | Design-ready |
-| BLD-CRT-008 | P1 | Cancel agent creation | No unintended agent is created | Design-ready |
+| BLD-CRT-004 | P0 | Create agent through natural-language idea | Builder captures idea and initiates assisted creation | Design-ready |
+| BLD-CRT-005 | P0 | Builder asks focused follow-up question(s) | Required setup information is collected before draft creation | Design-ready |
+| BLD-CRT-006 | P0 | Create agent from scratch | Valid name/details produce a new draft agent | Design-ready |
+| BLD-CRT-007 | P0 | Validate required creation fields | Missing required data prevents invalid draft creation | Design-ready |
+| BLD-CRT-008 | P0 | Cancel agent creation | No unintended agent is created | Design-ready |
 | BLD-CRT-009 | P2 | Recover from assisted-generation failure | User receives controlled failure/retry behaviour | Implementation dependent |
 | BLD-CRT-010 | TBD | Resume recently edited agent | User can pick up prior work according to access rules | Conditional / nice-to-have |
 | BLD-CRT-011 | TBD | View All Agents | List contains only agents permitted for user's role/scope | Conditional; definition pending |
@@ -338,11 +340,11 @@ The official Roles & Actions Matrix is now the authorization baseline. Role perm
 
 # 15. P0 Detailed Test-Definition Baseline
 
-The reconciled catalogue contains **52 P0 business scenarios**. They do not map one-to-one to test definitions: related scenarios share reusable definitions where they form one coherent behaviour.
+The updated catalogue contains **57 P0 business scenarios**. They do not map one-to-one to test definitions: related scenarios share reusable definitions where they form one coherent behaviour.
 
-The current detailed P0 baseline is **32 reusable Manual Test Definitions** with **96 explicit execution variants**.
+The current detailed P0 baseline is **35 reusable Manual Test Definitions** with **101 explicit functional execution variants**. Two dedicated E2E regression executions bring the AS20 dashboard-managed baseline to **103 variants**.
 
-Explicit P0 coverage includes required Patterns and Pattern rules; rollout tenants/default Spaces; Tenant/Space governance; Agent creation/configuration; private and marketplace publication; frozen V1→V2 versioning; Marketplace discovery; governed runtime/multi-turn; personal sources; generated files; RBAC; Space/Tenant isolation; and P0 E2E journeys.
+Explicit P0 coverage includes required Patterns and Pattern rules; rollout tenants/default Spaces; Tenant/Space governance; assisted and from-scratch Agent creation including required-field validation and cancellation; Agent configuration; private and marketplace publication; frozen V1→V2 versioning; Marketplace discovery; governed runtime/multi-turn; personal sources; generated files; RBAC; Space/Tenant isolation; and P0 E2E journeys.
 
 The 10-check smoke suite remains intentionally smaller than full P0 coverage and is used only as the initial environment/build sanity gate.
 
