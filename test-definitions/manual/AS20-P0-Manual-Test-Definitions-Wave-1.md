@@ -1,6 +1,6 @@
 # Agent Studio 2.0 — P0 Manual Test Definitions — Wave 1
 
-**Document Status:** Draft v0.2 — Reconciled 16 Sep 2026  
+**Document Status:** Draft v0.3 — Updated 17 Sep 2026 after business walkthrough  
 **Priority:** P0 / Release-Critical Baseline  
 **Execution Status:** Design-ready / Not Executed — Awaiting Environment  
 **Parent Catalogue:** `scenarios/Agent-Studio-2.0-Business-Scenario-Catalogue.md`  
@@ -8,7 +8,7 @@
 
 ## 1. Purpose
 
-This consolidated Wave 1 baseline contains **32 reusable P0 Manual Test Definitions**. It covers the release-critical pre-production lifecycle from Pattern/Tenant/Space governance through Agent creation, publication, Marketplace/runtime, sources, generated output and isolation. Production deployment beginning with `Request deploy` is excluded.
+This consolidated Wave 1 baseline contains **35 reusable P0 Manual Test Definitions**. It covers the release-critical pre-production lifecycle from Pattern/Tenant/Space governance through Agent creation, publication, Marketplace/runtime, sources, generated output and isolation. Production deployment beginning with `Request deploy` is excluded.
 
 A Test Definition is reusable; role, tenant, space, state and data permutations belong in the Execution Matrix rather than being duplicated as separate definitions.
 
@@ -100,6 +100,33 @@ A Test Definition is reusable; role, tenant, space, state and data permutations 
 **Steps:** Enter assigned Space; start Agent Builder; confirm enabled/default Pattern; create with valid minimum data.
 
 **Expected:** Space Designer can create; Low Risk is default where required; exactly one Pattern is associated; draft belongs to current scope. Tenant Owner, Space Owner and Space User cannot perform 6.1 from those roles alone.
+
+## MTD-BLD-005 — Create agent through assisted natural-language idea
+**Scenarios:** BLD-CRT-004, BLD-CRT-005  
+**Priority:** P0  
+**Principal Role:** Space Designer
+
+**Steps:** Enter Agent Builder; provide a valid natural-language agent idea; verify the builder interprets the idea and asks focused follow-up question(s); provide the requested information and continue toward draft creation.
+
+**Expected:** Assisted creation starts from the supplied idea, collects the information required to create a usable draft, and does not silently invent or omit required setup information.
+
+## MTD-BLD-006 — Create agent from scratch with required-field validation
+**Scenarios:** BLD-CRT-006, BLD-CRT-007  
+**Priority:** P0  
+**Principal Role:** Space Designer
+
+**Steps:** Start from scratch; first attempt to continue/create with required information missing; verify validation; then provide valid required name/details and create the draft.
+
+**Expected:** Invalid/incomplete creation is prevented with usable validation; valid required data creates one new draft Agent in the assigned scope.
+
+## MTD-BLD-007 — Cancel agent creation without side effects
+**Scenario:** BLD-CRT-008  
+**Priority:** P0  
+**Principal Role:** Space Designer
+
+**Steps:** Start Agent creation and enter distinguishable draft information; cancel before creation is completed; return to the applicable Agent list/recent work and search for the cancelled Agent.
+
+**Expected:** Creation is cancelled cleanly; no unintended Agent/draft is created or exposed as a usable Agent.
 
 ## MTD-BLD-002 — Configure agent instructions within Pattern governance
 **Scenarios:** BLD-CFG-002, GOV-TEN-011, SEC-RBAC-011  
@@ -287,7 +314,7 @@ The functional behaviours below are P0. Exact role mapping among Figma `Publish`
 | Area | Definitions |
 |---|---:|
 | Pattern / Tenant / Space Governance | 7 |
-| Agent Build / Configuration | 4 |
+| Agent Build / Configuration | 7 |
 | Same-Space Access / Editing | 2 |
 | Runtime | 5 |
 | Sources | 3 |
@@ -295,9 +322,9 @@ The functional behaviours below are P0. Exact role mapping among Figma `Publish`
 | Space / Tenant Isolation | 2 |
 | Publication / Marketplace / Versioning | 5 |
 | E2E Regression | 2 |
-| **Total** | **32** |
+| **Total** | **35** |
 
-The **32 definitions** cover the reconciled **52 P0 business scenarios** through reuse; they are expanded into **96 explicit execution variants** in the Execution Matrix.
+The **35 definitions** cover the updated **57 P0 business scenarios** through reuse; the functional definitions expand into **101 explicit execution variants** in the Execution Matrix. The two E2E definitions are additionally represented by dedicated dashboard-managed regression executions, giving **103 dashboard-managed variants** for the AS20 bundle.
 
 # 13. Execution Status Values
 
