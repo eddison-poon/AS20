@@ -1,6 +1,6 @@
 # Agent Studio 2.0 — P0 Requirements / Test Traceability Matrix (RTM)
 
-**Document Status:** Draft v0.2 — Reconciled 16 Sep 2026  
+**Document Status:** Draft v0.3 — Updated 17 Sep 2026 after business walkthrough  
 **Release Context:** Phase 1a / New Ideation — 28 Sep 2026 target  
 **Coverage Wave:** P0 Wave 1  
 **Scenario Catalogue:** `scenarios/Agent-Studio-2.0-Business-Scenario-Catalogue.md`  
@@ -11,7 +11,7 @@
 
 This RTM proves the chain **Requirement / Rule → Business Scenario → Manual Test Definition → Execution Variant → Evidence / Defect**. `COVERED` means test coverage is designed; it does **not** mean the test has passed.
 
-Reconciled baseline: **153 scenarios = 52 P0 + 75 P1 + 26 P2/TBD; 32 reusable P0 definitions; 96 explicit P0 execution variants; 10 smoke checks.**
+Updated baseline: **153 scenarios = 57 P0 + 70 P1 + 26 P2/TBD; 35 reusable P0 definitions; 101 explicit functional P0 execution variants; 2 dedicated E2E regression variants; 103 dashboard-managed variants; 10 smoke checks.**
 
 ### Status
 - **COVERED** — scenario, definition and planned execution exist.
@@ -49,6 +49,11 @@ Reconciled baseline: **153 scenarios = 52 P0 + 75 P1 + 26 P2/TBD; 32 reusable P0
 | REQ-BLD-001 | Space Designer creates Agent | RAM 6.1/FLOW | BLD-CRT-001 | MTD-BLD-001 | EX-BLD-001..004 | COVERED |
 | REQ-BLD-002 | Low Risk is default/pre-selected | ENG/FLOW | BLD-CRT-002 | MTD-BLD-001 | EX-BLD-001 | COVERED |
 | REQ-BLD-003 | Agent uses exactly one Pattern | ENG/FLOW | BLD-CRT-003 | MTD-BLD-001 | EX-BLD-001 | COVERED |
+| REQ-BLD-008 | Natural-language idea starts assisted creation | FIG-BLD | BLD-CRT-004 | MTD-BLD-005 | EX-BLD-013 | COVERED |
+| REQ-BLD-009 | Builder asks focused follow-up questions | FIG-BLD | BLD-CRT-005 | MTD-BLD-005 | EX-BLD-014 | COVERED |
+| REQ-BLD-010 | Space Designer can create Agent from scratch | FIG-BLD/RAM 6.1 | BLD-CRT-006 | MTD-BLD-006 | EX-BLD-015 | COVERED |
+| REQ-BLD-011 | Required creation fields prevent invalid draft | FIG-BLD/RULE | BLD-CRT-007 | MTD-BLD-006 | EX-BLD-016 | COVERED |
+| REQ-BLD-012 | Cancelling creation creates no unintended Agent | FIG-BLD/RULE | BLD-CRT-008 | MTD-BLD-007 | EX-BLD-017 | COVERED |
 | REQ-BLD-004 | Space Designer configures Agent | RAM 6.2 | BLD-CFG-002 | MTD-BLD-002 | EX-BLD-005..008 | COVERED |
 | REQ-BLD-005 | Agent instructions cannot override higher governance | RULE | BLD-CFG-002 | MTD-BLD-002 | EX-BLD-005 + governed runtime | COVERED |
 | REQ-BLD-006 | Designer attaches approved MCP/skills | RAM 6.5 | BLD-CFG-003/004 | MTD-BLD-003 | EX-BLD-009..010 | COVERED |
@@ -123,18 +128,18 @@ Reconciled baseline: **153 scenarios = 52 P0 + 75 P1 + 26 P2/TBD; 32 reusable P0
 
 | E2E Scenario | Definition / Chain | Coverage |
 |---|---|---|
-| E2E-001 Governed lifecycle | MTD-E2E-001 / E2E-X01 | PARTIAL — publish transition |
-| E2E-002 Inheritance/capability boundary | MTD-E2E-001 | COVERED |
-| E2E-003 V1 first publication | MTD-E2E-001 + MTD-VER-001 | PARTIAL — publisher role |
+| E2E-001 Governed lifecycle | MTD-E2E-001 / EX-E2E-001 / E2E-X01 | PARTIAL — publish transition |
+| E2E-002 Inheritance/capability boundary | MTD-E2E-001 / EX-E2E-001 | COVERED |
+| E2E-003 V1 first publication | MTD-E2E-001 + MTD-VER-001 / EX-E2E-001 | PARTIAL — publisher role |
 | E2E-004 V1 → draft → V2 | MTD-VER-001 / E2E-X04 | COVERED functionally |
 | E2E-005 Private boundary | MTD-PUB-003 / E2E-X05 | PARTIAL — publisher/private role |
 | E2E-006 Space isolation | MTD-ISO-001 / E2E-X03 | COVERED |
-| E2E-007 Source-grounded runtime | MTD-SRC-001/003 + E2E-X02 | COVERED |
-| E2E-008 Runtime-to-artifact | MTD-GEN-001/002 + E2E-X02 | COVERED |
+| E2E-007 Source-grounded runtime | MTD-E2E-002 + MTD-SRC-001/003 / EX-E2E-002 / E2E-X02 | COVERED |
+| E2E-008 Runtime-to-artifact | MTD-E2E-002 + MTD-GEN-001/002 / EX-E2E-002 / E2E-X02 | COVERED |
 
 # 12. Current P0 Coverage Position
 
-The reconciled P0 catalogue has **52 P0 scenarios**. These intentionally map into **32 reusable definitions**, not 52 one-to-one cases. The definitions expand to **96 role/scope/state execution variants**. The **10 smoke checks** are only an initial environment sanity gate.
+The updated P0 catalogue has **57 P0 scenarios** after BLD-CRT-004 through BLD-CRT-008 were raised from P1 to P0 during the 17 Sep business walkthrough. These intentionally map into **35 reusable definitions**, not 57 one-to-one cases. The functional definitions expand to **101 role/scope/state execution variants**. Two dedicated E2E regression variants bring the dashboard-managed baseline to **103 variants**. The **10 smoke checks** remain the initial environment sanity gate.
 
 Primary remaining P0 uncertainty is the exact mapping among **Figma Publish / Private Testing / Marketplace Testing / RAM 6.9 Promote to tenant-shared**, plus the precise Marketplace scope.
 
