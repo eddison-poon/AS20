@@ -76,7 +76,7 @@ A Test Definition is reusable; role, tenant, space, state and data permutations 
 **Expected:** Tenant Owner can create/assign; Space Owner cannot create Space. If additional Spaces are disabled for the release, record **N/A — Release Scope**.
 
 ## MTD-GOV-004 — Verify Space Owner assigns members and roles
-**Scenario:** GOV-SPC-004  
+**Scenarios:** GOV-SPC-004, GOV-SPC-009  
 **Matrix Ref:** 5.5
 
 **Steps:** Confirm candidate identities already exist as Tenant Members; Space Owner adds Space Designer and Space User to Space A and assigns roles; attempt an identity that is not a Tenant Member; save; sign in separately as each.
@@ -165,7 +165,7 @@ A Test Definition is reusable; role, tenant, space, state and data permutations 
 
 ## MTD-BLD-004 — Prevent unapproved MCP / skill / API use
 **Scenarios:** BLD-CFG-003, BLD-CFG-004, GOV-TEN-010, SEC-RBAC-009, SEC-RBAC-010  
-**Matrix Ref:** 4.4, 6.5
+**Matrix Ref:** 4.4, 6.4
 
 **Steps:** Search/select an unapproved resource; attempt direct submission/invocation where possible.
 
