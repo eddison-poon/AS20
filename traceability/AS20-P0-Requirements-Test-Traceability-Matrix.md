@@ -76,9 +76,9 @@ Updated baseline: **158 scenarios = 60 P0 + 72 P1 + 26 P2/TBD; 37 reusable P0 de
 | Req ID | Requirement / Rule | Source / RAM | Scenario | Definition | Execution | Status |
 |---|---|---|---|---|---|---|
 | REQ-RUN-001 | Designer can run same-Space Agent | RAM 6.7/7.1 | RUN-001 | MTD-RUN-001 | EX-RUN-001 | COVERED |
-| REQ-RUN-002 | Space User can run same-Space Agent | RAM 6.7/7.1 | RUN-001/SEC-RBAC-004 | MTD-RUN-002 | EX-RUN-002 | COVERED |
-| REQ-RUN-003 | Tenant Owner cannot run from TO role alone | RAM 6.7/7.1 | SEC-RBAC-005 | MTD-RUN-003 | EX-RUN-003 | COVERED |
-| REQ-RUN-004 | Space Owner cannot run from SO role alone | RAM 6.7/7.1 | SEC-RBAC-006 | MTD-RUN-003 | EX-RUN-004 | COVERED |
+| REQ-RUN-002 | Space User can run same-Space Agent | RAM 7.1 | RUN-001/SEC-RBAC-004 | MTD-RUN-002 | EX-RUN-002 | COVERED |
+| REQ-RUN-003 | Tenant Owner cannot run from TO role alone | RAM 7.1 | SEC-RBAC-005 | MTD-RUN-003 | EX-RUN-003 | COVERED |
+| REQ-RUN-004 | Space Owner cannot run from SO role alone | RAM 7.1 | SEC-RBAC-006 | MTD-RUN-003 | EX-RUN-004 | COVERED |
 | REQ-RUN-005 | Unauthorized direct runtime invocation rejected | RULE | SEC-RBAC-006 | MTD-RUN-003 | EX-RUN-005..006 | COVERED |
 | REQ-RUN-006 | User can view own execution outputs/history | RAM 7.2 | RUN-007 | MTD-RUN-004 | EX-RUN-007..010 | COVERED |
 | REQ-RUN-007 | Multi-turn conversation retains appropriate context | FIG-RUN | RUN-003 | MTD-RUN-005 | EX-RUN-011..012 | COVERED |
