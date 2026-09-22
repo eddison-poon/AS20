@@ -199,13 +199,13 @@ A Test Definition is reusable; role, tenant, space, state and data permutations 
 
 ## MTD-RUN-002 — Space User executes a same-space agent
 **Scenarios:** RUN-001, RUN-002, SEC-RBAC-004  
-**Matrix Ref:** 6.7, 7.1
+**Matrix Ref:** 7.1
 
 **Expected:** Space User discovers/views/runs permitted Agent but cannot edit configuration.
 
 ## MTD-RUN-003 — Prevent Tenant Owner / Space Owner from executing agent
 **Scenarios:** SEC-RBAC-005, SEC-RBAC-006  
-**Matrix Ref:** 6.7, 7.1
+**Matrix Ref:** 7.1
 
 **Steps:** Attempt execution as Tenant Owner and Space Owner, including direct invocation where possible.
 
