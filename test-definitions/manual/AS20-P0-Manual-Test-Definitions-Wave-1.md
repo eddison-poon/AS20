@@ -1,6 +1,6 @@
 # Agent Studio 2.0 — P0 Manual Test Definitions — Wave 1
 
-**Document Status:** Draft v0.3 — Updated 17 Sep 2026 after business walkthrough  
+**Document Status:** Draft v0.4 — Reconciled 23 Sep 2026 with implemented screens and updated RBAC  
 **Priority:** P0 / Release-Critical Baseline  
 **Execution Status:** Design-ready / Not Executed — Awaiting Environment  
 **Parent Catalogue:** `scenarios/Agent-Studio-2.0-Business-Scenario-Catalogue.md`  
@@ -8,7 +8,7 @@
 
 ## 1. Purpose
 
-This consolidated Wave 1 baseline contains **35 reusable P0 Manual Test Definitions**. It covers the release-critical pre-production lifecycle from Pattern/Tenant/Space governance through Agent creation, publication, Marketplace/runtime, sources, generated output and isolation. Production deployment beginning with `Request deploy` is excluded.
+This consolidated Wave 1 baseline contains **37 reusable P0 Manual Test Definitions**. It covers the release-critical pre-production lifecycle from Pattern/Tenant/Space governance through Agent creation, publication, Marketplace/runtime, sources, generated output and isolation. Production deployment beginning with `Request deploy` is excluded.
 
 A Test Definition is reusable; role, tenant, space, state and data permutations belong in the Execution Matrix rather than being duplicated as separate definitions.
 
@@ -22,6 +22,7 @@ A Test Definition is reusable; role, tenant, space, state and data permutations 
 | Space B | Second independently scoped space where available |
 | Patterns | Low Risk and SDLC |
 | Tenant Owner | Role-pure Tenant Owner |
+| Tenant Member | Role-pure Tenant Member under Tenant A |
 | Space Owner | Role-pure Space Owner |
 | Space Designer A | Agent Creator assigned to Space A |
 | Space User A / A2 | Two consumers assigned to Space A |
@@ -76,11 +77,11 @@ A Test Definition is reusable; role, tenant, space, state and data permutations 
 
 ## MTD-GOV-004 — Verify Space Owner assigns members and roles
 **Scenario:** GOV-SPC-004  
-**Matrix Ref:** 6.3
+**Matrix Ref:** 5.5
 
-**Steps:** Space Owner adds Space Designer and Space User to Space A; save; sign in separately as each.
+**Steps:** Confirm candidate identities already exist as Tenant Members; Space Owner adds Space Designer and Space User to Space A and assigns roles; attempt an identity that is not a Tenant Member; save; sign in separately as each.
 
-**Expected:** Membership/roles persist; only Space Owner receives the 6.3 action under the supplied matrix.
+**Expected:** Membership/roles persist; only Space Owner receives the 5.5 action; Space assignment is constrained to existing Tenant Members.
 
 ## MTD-GOV-005 — Verify rollout tenants, default spaces and mandatory-space protection
 **Scenarios:** GOV-TEN-001, GOV-TEN-002, GOV-SPC-001  
@@ -89,6 +90,24 @@ A Test Definition is reusable; role, tenant, space, state and data permutations 
 **Steps:** Verify Training, AME, CAIO, CIB, COO, CTO, Cyber, GF, IWPB and UK; confirm each required tenant has its default Space; inspect/attempt supported removal of a mandatory default Space.
 
 **Expected:** All required rollout tenants/default Spaces exist and mandatory default Space cannot be removed.
+
+## MTD-GOV-006 — Verify Tenant Member read-only tenant access and Space eligibility
+**Scenarios:** GOV-TEN-013, GOV-SPC-009  
+**Matrix Ref:** 4.1, 5.5  
+**Principal Roles:** Tenant Member, Space Owner
+
+**Steps:** Sign in as a role-pure Tenant Member and view Tenant A configuration; attempt tenant configuration changes; as Space Owner, select that Tenant Member for Space assignment; attempt to assign a non-Tenant-Member identity.
+
+**Expected:** Tenant Member can view tenant configuration but cannot administer it. Space Owner can assign eligible Tenant Members to a Space; direct Space assignment of an identity outside tenant membership is prevented.
+
+## MTD-GOV-007 — Verify Space System Prompt governance hierarchy
+**Scenarios:** GOV-SPC-008, GOV-TEN-011, BLD-CFG-002, RUN-004  
+**Matrix Ref:** 5.3, 5.6, 6.2  
+**Principal Roles:** Space Owner / Tenant Owner for Space configuration; Space Designer for Agent validation
+
+**Steps:** Save a distinguishable Space System Prompt; reload; create/configure an Agent in the Space; verify compatible Space context applies; then introduce controlled conflicts at Space and Agent levels and execute.
+
+**Expected:** Space System Prompt persists and applies to Agents in the Space. Governance precedence remains **Pattern > Tenant > Space > Agent**; lower-level instructions cannot override higher-level rules.
 
 # 4. Agent Creation & Configuration
 
@@ -138,11 +157,11 @@ A Test Definition is reusable; role, tenant, space, state and data permutations 
 
 ## MTD-BLD-003 — Attach approved MCP tool / skill
 **Scenarios:** BLD-CFG-003, BLD-CFG-004, GOV-TEN-010  
-**Matrix Ref:** 6.5
+**Matrix Ref:** 6.4
 
-**Steps:** Select approved Skill and MCP/tool; save/reload; test use where practical.
+**Steps:** Select an approved Skill and MCP/connection/tool; select the required tool where applicable; complete personal credential/access setup or choose the supported setup-later path; save/reload; test use where practical.
 
-**Expected:** Approved resources persist and work only when required access is established; Pattern inheritance does not carry credentials.
+**Expected:** Approved resources persist. Connection/tool selection is retained; personal credentials/access are user-specific and are not carried by Pattern inheritance. A connection requiring access cannot be used until setup is complete.
 
 ## MTD-BLD-004 — Prevent unapproved MCP / skill / API use
 **Scenarios:** BLD-CFG-003, BLD-CFG-004, GOV-TEN-010, SEC-RBAC-009, SEC-RBAC-010  
@@ -156,7 +175,7 @@ A Test Definition is reusable; role, tenant, space, state and data permutations 
 
 ## MTD-ACC-001 — Verify permitted roles can view same-space agents
 **Scenarios:** SEC-RBAC-003, SEC-RBAC-004  
-**Matrix Ref:** 6.6
+**Matrix Ref:** 6.5
 
 **Steps:** Test Tenant Owner, Space Owner, Space Designer and Space User separately against Agent A.
 
@@ -164,7 +183,7 @@ A Test Definition is reusable; role, tenant, space, state and data permutations 
 
 ## MTD-ACC-002 — Verify only Space Designer can edit same-space agent
 **Scenarios:** SEC-RBAC-003, SEC-RBAC-005, SEC-RBAC-006  
-**Matrix Ref:** 6.7
+**Matrix Ref:** 6.6
 
 **Steps:** Designer edits and saves; repeat as Tenant Owner, Space Owner and Space User; attempt direct unauthorized edit.
 
@@ -174,19 +193,19 @@ A Test Definition is reusable; role, tenant, space, state and data permutations 
 
 ## MTD-RUN-001 — Space Designer executes a same-space agent
 **Scenarios:** RUN-001, RUN-002  
-**Matrix Ref:** 6.8, 7.1
+**Matrix Ref:** 6.7, 7.1
 
 **Expected:** Designer opens/runs permitted Agent successfully within governance; runtime metadata appears where supported.
 
 ## MTD-RUN-002 — Space User executes a same-space agent
 **Scenarios:** RUN-001, RUN-002, SEC-RBAC-004  
-**Matrix Ref:** 6.8, 7.1
+**Matrix Ref:** 6.7, 7.1
 
 **Expected:** Space User discovers/views/runs permitted Agent but cannot edit configuration.
 
 ## MTD-RUN-003 — Prevent Tenant Owner / Space Owner from executing agent
 **Scenarios:** SEC-RBAC-005, SEC-RBAC-006  
-**Matrix Ref:** 6.8, 7.1
+**Matrix Ref:** 6.7, 7.1
 
 **Steps:** Attempt execution as Tenant Owner and Space Owner, including direct invocation where possible.
 
@@ -261,41 +280,46 @@ A Test Definition is reusable; role, tenant, space, state and data permutations 
 
 # 10. Publication, Marketplace & Versioning
 
-The functional behaviours below are P0. Exact role mapping among Figma `Publish`, `Private Testing`, `Marketplace Testing` and RAM 6.9 `Promote to tenant-shared` remains open.
+The updated matrix and implemented Publish screen resolve the earlier publisher ambiguity: **Space Designer publishes an Agent to the Agent Marketplace of the Space (6.8)**. Production deployment remains outside this baseline.
 
 ## MTD-PUB-001 — Unpublished draft unavailable to normal consumer
 **Scenario:** PUB-001
 
-**Expected:** Draft is not exposed as generally consumable; direct consumer invocation is rejected unless a separate authorized draft-testing path is explicitly supported.
+**Expected:** Draft remains in the Designer's draft context and is not exposed through the Space Agent Marketplace. Space Designer may validate it through the debug path (6.7); Space User cannot consume it before publication.
 
-## MTD-PUB-002 — Publish/promote agent to permitted consumer scope
-**Scenarios:** PUB-003, PUB-010  
-**Matrix Ref:** Candidate 6.9  
-**Role:** TBD
+## MTD-PUB-002 — Publish Agent version to the Space Agent Marketplace
+**Scenarios:** PUB-002, PUB-003, PUB-010  
+**Matrix Ref:** 6.8  
+**Principal Role:** Space Designer
 
-**Expected:** Valid Agent/version transitions to intended shared/Marketplace state; visibility changes only after success; scope is restricted; frozen published version is used.
+**Steps:** Open a valid draft; open Publish; verify version shown; enter What's New where applicable; choose Category; add Tags; publish v1; return to Agent Builder/Marketplace.
 
-## MTD-PUB-003 — Verify Private Testing publication and visibility
-**Scenarios:** PUB-002, MKT-003, E2E-005  
-**Role:** TBD pending final Publish mapping
+**Expected:** Space Designer can publish; a frozen version is created; publication metadata persists; the Agent becomes available through the intended Space Marketplace only after successful publication. Non-Designer roles cannot publish from their role alone.
 
-**Steps:** Publish Agent A using Private Testing; verify authorized private path; sign in as normal Marketplace consumer and search/access Agent A.
+## MTD-PUB-003 — Verify publication does not cross Space boundary
+**Scenarios:** PUB-003, PUB-010, MKT-003, MKT-004  
+**Matrix Ref:** 6.8, 7.1  
+**Principal Roles:** Space Designer, Space User
 
-**Expected:** Frozen private version created; intended private access succeeds; general Marketplace consumer cannot discover/use it.
+**Steps:** Publish Agent A from Space A; verify an authorized Space A user can discover/run it; verify a Space B-only user cannot discover/open/run it, including direct access where feasible.
+
+**Expected:** Publication is scoped to the Agent Marketplace of Space A and does not create cross-Space visibility or execution rights.
 
 ## MTD-VER-001 — Verify frozen release and V1 → draft → V2 lifecycle
-**Scenarios:** PUB-009, VER-001, VER-002, VER-003, E2E-004
+**Scenarios:** PUB-009, VER-001, VER-002, VER-003, E2E-004  
+**Matrix Ref:** 6.8  
+**Principal Role:** Space Designer
 
 **Steps:** Publish V1 and record identifying behaviour; edit draft without publishing; consumer executes again; publish V2; consumer executes again.
 
 **Expected:** V1 is frozen; draft edits do not alter V1; runtime remains V1 until successful V2 publish; thereafter consumer receives V2.
 
-## MTD-MKT-001 — Verify authorized Marketplace discovery after publication
+## MTD-MKT-001 — Verify authorized Space Marketplace discovery after publication
 **Scenarios:** MKT-001, MKT-002
 
-**Steps:** Authorized consumer opens Marketplace; publish/share Agent A to intended state; refresh/re-enter; locate/open Agent A.
+**Steps:** Authorized Space User opens Agent Marketplace; Space Designer publishes Agent A; refresh/re-enter; locate/open Agent A.
 
-**Expected:** Marketplace contains only permitted set; successful publication makes Agent A discoverable only in intended scope; listing opens correct published Agent/version.
+**Expected:** Marketplace contains only the permitted Space set; successful publication makes Agent A discoverable in the intended Space; listing opens the correct published Agent/version.
 
 # 11. End-to-End Regression Definitions
 
@@ -313,7 +337,7 @@ The functional behaviours below are P0. Exact role mapping among Figma `Publish`
 
 | Area | Definitions |
 |---|---:|
-| Pattern / Tenant / Space Governance | 7 |
+| Pattern / Tenant / Space Governance | 9 |
 | Agent Build / Configuration | 7 |
 | Same-Space Access / Editing | 2 |
 | Runtime | 5 |
@@ -322,9 +346,9 @@ The functional behaviours below are P0. Exact role mapping among Figma `Publish`
 | Space / Tenant Isolation | 2 |
 | Publication / Marketplace / Versioning | 5 |
 | E2E Regression | 2 |
-| **Total** | **35** |
+| **Total** | **37** |
 
-The **35 definitions** cover the updated **57 P0 business scenarios** through reuse; the functional definitions expand into **101 explicit execution variants** in the Execution Matrix. The two E2E definitions are additionally represented by dedicated dashboard-managed regression executions, giving **103 dashboard-managed variants** for the AS20 bundle.
+The **37 definitions** cover the updated **60 P0 business scenarios** through reuse; the functional definitions expand into **109 explicit execution variants** in the Execution Matrix. The two E2E definitions are additionally represented by dedicated dashboard-managed regression executions, giving **111 dashboard-managed variants** for the AS20 bundle.
 
 # 13. Execution Status Values
 
@@ -337,8 +361,7 @@ The **35 definitions** cover the updated **57 P0 business scenarios** through re
 
 # 14. Current Follow-Up
 
-1. Resolve Publish / Private Testing / Marketplace Testing / RAM 6.9 mapping.
-2. Confirm additional-Space release scope.
+1. Confirm additional-Space rollout scope beyond the required default Space.
 3. Confirm source extensions and 10MB boundary semantics.
 4. Confirm generated-file ownership/retention.
 5. Confirm multi-role effective permissions.
