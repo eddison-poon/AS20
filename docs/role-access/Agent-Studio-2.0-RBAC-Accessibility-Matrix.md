@@ -1,7 +1,7 @@
 # Agent Studio 2.0 — RBAC / Accessibility Matrix
 
-**Document Status:** Draft v0.1  
-**Source:** Agent Hub Tenant Management — Roles & Actions diagram and Roles & Actions Matrix supplied 15 Sep 2026  
+**Document Status:** Draft v0.2 — Reconciled 23 Sep 2026  
+**Source:** Updated Agent Hub Tenant Management — Roles & Actions diagram and Roles & Actions Matrix supplied 22 Sep 2026  
 **Current Test Scope:** Pre-production-deployment flow. Production deployment actions are excluded from the current detailed test-definition wave.
 
 ---
@@ -21,6 +21,7 @@ Authorization validation must cover both UI behaviour and, where technically pos
 | Role | Working Description |
 |---|---|
 | Tenant Owner | Project / tenant administrator |
+| Tenant Member | Tenant-level member eligible for Space assignment; read-only tenant configuration |
 | Space Owner | Workspace administrator |
 | Space Designer (Agent Creator) | Agent builder / creator |
 | Space User | Agent consumer |
@@ -56,44 +57,45 @@ The excluded actions remain useful as reference but should not distract from the
 
 ## 4. Testable Permission Matrix — Relevant Actions
 
-Legend: **Y = permitted**, **N = not permitted**.
+Legend: **Y = permitted**, **N = not permitted**. The current release prioritizes Tenant Owner, Tenant Member, Space Owner, Space Designer and Space User. Platform Admin, Engineer, Viewer/Requestor and Governance Manager remain reference roles and are not multiplied into P0 variants unless a critical authorization boundary requires them.
 
-| Ref | Action | Tenant Owner | Space Owner | Space Designer | Space User | AH Platform Admin | AH Engineer | Viewer / Requestor | Governance Manager |
+| Ref | Action | Tenant Owner | Tenant Member | Space Owner | Space Designer | Space User | AH Platform Admin | AH Engineer | Viewer / Requestor |
 |---|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| 1.1 | Navigation (Read-Only) | N | N | N | N | N | N | Y | N |
+| 1.1 | Navigation (Read-Only) | N | N | N | N | N | N | N | Y |
 | 1.2 | Browse Marketplace pattern catalogue | Y | Y | Y | Y | Y | Y | Y | Y |
 | 1.3 | View pattern detail (Agents / MCPs / Skills, AIRCo ID) | Y | Y | Y | Y | Y | Y | Y | Y |
-| 4.1 | View tenant configuration (read only) | Y | Y | N | N | Y | Y | N | Y |
-| 4.2 | Change tenant configuration | Y | N | N | N | Y | N | N | N |
+| 4.1 | View tenant configuration (read only) | Y | Y | Y | N | N | Y | Y | N |
+| 4.2 | Change tenant configuration | Y | N | N | N | N | Y | N | N |
 | 4.3 | Enable / disable Agent Patterns for tenant | Y | N | N | N | N | N | N | N |
 | 4.4 | Define which agent capabilities / types can be created | Y | N | N | N | N | N | N | N |
 | 4.5 | Add / remove tenant member | Y | N | N | N | N | N | N | N |
-| 4.6 | Adjust token limit (tenant) | Y | N | N | N | N | N | N | N |
-| 4.7 | Re-assign project admin for orphan tenant | N | N | N | N | Y | N | N | N |
-| 4.8 | Inactivate tenant | Y | N | N | N | Y | N | N | N |
-| 4.9 | Reactivate tenant | Y | N | N | N | Y | N | N | N |
+| 4.6 | Set / change token limit for tenant | Y | N | N | N | N | N | N | N |
+| 4.7 | Re-assign tenant owner (orphan tenant only) | N | N | N | N | N | Y | N | N |
+| 4.8 | Inactivate tenant | Y | N | N | N | N | Y | N | N |
+| 4.9 | Reactivate tenant | Y | N | N | N | N | Y | N | N |
 | 5.1 | Create space within tenant | Y | N | N | N | N | N | N | N |
-| 5.2 | Assign / change Space Admin (Space Owner) | Y | N | N | N | N | N | N | N |
-| 5.3 | Configure space settings (pattern subset, guardrails) | Y | Y | N | N | N | N | N | N |
-| 5.4 | Set / change space token limit | Y | Y | N | N | N | N | N | N |
-| 5.5 | View configuration of space | Y | Y | Y | Y | N | N | N | N |
-| 5.6 | Inactivate a space | Y | N | N | N | N | N | N | N |
-| 5.7 | Reactivate a space | Y | N | N | N | N | N | N | N |
-| 6.1 | Create an agent from enabled pattern | N | N | Y | N | N | N | N | N |
-| 6.2 | Configure agent (prompt, logic, parameters) within pattern | N | N | Y | N | N | N | N | N |
-| 6.3 | Add members to space and assign roles | N | Y | N | N | N | N | N | N |
-| 6.4 | Review agent configuration request | N | Y | N | N | N | N | N | N |
-| 6.5 | Attach approved MCP tools / skills to an agent | N | N | Y | N | N | N | N | N |
-| 6.6 | View agents within the same space | Y | Y | Y | Y | N | N | N | N |
-| 6.7 | Edit agents within the same space | N | N | Y | N | N | N | N | N |
-| 6.8 | Run agents within the same space | N | N | Y | Y | N | N | N | N |
-| 6.9 | Promote an agent to tenant-shared | Y | N | N | N | N | N | N | N |
-| 6.10 | Create / schedule an automated workflow | N | Y | Y | N | N | N | N | N |
-| 6.11 | Inactivate an agent | Y | Y | Y | N | N | N | N | N |
-| 6.12 | Reactivate an agent | Y | Y | Y | N | N | N | N | N |
-| 7.1 | Execute / run an agent | N | N | Y | Y | N | N | N | N |
-| 7.2 | View own execution outputs and history | N | N | Y | Y | N | N | N | N |
+| 5.2 | Assign / change the Space Owner | Y | N | N | N | N | N | N | N |
+| 5.3 | Configure space settings (pattern subset, guardrails) | Y | N | Y | N | N | N | N | N |
+| 5.4 | Set / change token limit for space | Y | N | Y | N | N | N | N | N |
+| 5.5 | Add / remove members from space and assign roles (tenant members only) | N | N | Y | N | N | N | N | N |
+| 5.6 | View configuration of the space | Y | N | Y | Y | Y | N | N | N |
+| 5.7 | Inactivate a space | Y | N | N | N | N | N | N | N |
+| 5.8 | Reactivate a space | Y | N | N | N | N | N | N | N |
+| 6.1 | Create an agent from enabled pattern | N | N | N | Y | N | N | N | N |
+| 6.2 | Configure agent (prompt, logic, parameters) within the pattern | N | N | N | Y | N | N | N | N |
+| 6.3 | Review agent configuration request | N | N | Y | N | N | N | N | N |
+| 6.4 | Attach approved MCP tools / skills to an agent | N | N | N | Y | N | N | N | N |
+| 6.5 | View agents within the same space | Y | N | Y | Y | Y | N | N | N |
+| 6.6 | Edit agents within the same space | N | N | N | Y | N | N | N | N |
+| 6.7 | Run agents from debug window | N | N | N | Y | N | N | N | N |
+| 6.8 | Publish an agent to Agent Marketplace of the space | N | N | N | Y | N | N | N | N |
+| 6.9 | Create / schedule an automated workflow | N | N | N | Y | N | N | N | N |
+| 6.10 | Inactivate an agent | Y | N | Y | Y | N | N | N | N |
+| 6.11 | Reactivate an agent | Y | N | Y | Y | N | N | N | N |
+| 7.1 | Execute / run an agent from Agent Marketplace of a space | N | N | N | Y | Y | N | N | N |
+| 7.2 | View own execution outputs and history | N | N | N | Y | Y | N | N | N |
 
+> The supplied updated screenshot does not show the Governance Manager column in full. Its earlier governance/monitoring responsibilities are retained as reference only and are not used to derive new P0 variants from this update.
 ---
 
 ## 5. Role-Centric Interpretation
@@ -103,6 +105,10 @@ Legend: **Y = permitted**, **N = not permitted**.
 Key current-scope permissions include tenant administration, pattern enablement, tenant membership, space creation/assignment/configuration, viewing agents in the same space, promotion to tenant-shared, and agent/space/tenant inactivation/reactivation where specified.
 
 Important negative assertions include that Tenant Owner **does not create/configure/edit/run an agent** under actions 6.1, 6.2, 6.7, 6.8 and 7.1.
+
+### Tenant Member
+
+Tenant Member is now an explicit role. It can view tenant configuration under 4.1 but does not administer the tenant, space or Agent. Space membership assignment under 5.5 selects from tenant members.
 
 ### Space Owner
 
@@ -146,15 +152,15 @@ The following should be treated as P0/P1 RBAC controls when detailed Test Defini
 
 1. Only **Space Designer** can create an agent from an enabled pattern (6.1).
 2. Only **Space Designer** can configure/edit an agent (6.2, 6.7).
-3. Only **Space Designer** can attach approved MCP tools/skills (6.5).
-4. Only **Space Designer + Space User** can run/execute agents (6.8, 7.1).
+3. Only **Space Designer** can attach approved MCP tools/skills (6.4).
+4. Only **Space Designer** can run from the Builder debug window (6.7); **Space Designer + Space User** can execute from the Space Agent Marketplace (7.1).
 5. Tenant Owner and Space Owner may view same-space agents but must not gain execution rights merely because they administer the tenant/space.
 6. Same-space visibility must not imply cross-space visibility.
-7. Only **Space Owner** can add members to a space and assign roles (6.3).
+7. Only **Space Owner** can add/remove Space members and assign roles from existing Tenant Members (5.5).
 8. Only **Tenant Owner** can create spaces and assign/change the Space Owner (5.1, 5.2).
-9. Tenant Owner and Space Owner can configure space settings, but Space Designer/User are read-only for space configuration (5.3 vs 5.5).
+9. Tenant Owner and Space Owner can configure space settings; Space Designer/User can view configuration under 5.6 but cannot change it.
 10. Only **Tenant Owner** can enable/disable patterns and define permitted agent capability/types for the tenant (4.3, 4.4).
-11. Tenant Owner can promote an agent to tenant-shared; Space Designer cannot self-promote (6.9).
+11. Only Space Designer publishes an Agent to the Agent Marketplace of the Space (6.8).
 12. Runtime history access under 7.2 is explicitly **own execution outputs and history** and should be tested for cross-user isolation.
 
 ---
@@ -190,22 +196,26 @@ Where service/API access is available, at least one negative execution should at
 
 ---
 
-## 8. Important Reconciliation with Earlier Figma / Flow Assumptions
+## 8. Reconciliation with Updated Screens / Flow
 
 ### Resolved
 
-- **Agent Creator = Space Designer** is now explicitly supported by the official matrix.
-- Space User is an agent consumer and can execute agents.
-- Tenant Owner and Space Owner are administrators but are not automatically agent runners.
+- **Tenant Member** is now an explicit role and is the source population from which Space Owner assigns Space members.
+- **Agent Creator = Space Designer** remains confirmed.
+- **Publish is now explicit:** Space Designer publishes an Agent to the **Agent Marketplace of the Space** under action **6.8**.
+- Builder debug execution is action **6.7** and belongs to Space Designer.
+- Marketplace execution is action **7.1** and belongs to Space Designer + Space User.
+- Space membership/role administration moved to **5.5** and belongs to Space Owner.
+- Production deployment begins after the non-production testing flow and remains outside this release scope.
 
 ### Still Requiring Clarification
 
-1. Figma/operating-flow language previously implied Agent Creator could publish to the marketplace. The supplied current matrix does not expose a pre-production `Publish to Marketplace` action; 6.9 instead says Tenant Owner can `Promote an agent to tenant-shared`. The exact mapping between Figma Publish/Private/Marketplace and matrix action 6.9 must be clarified.
-2. Engineering/Figma space-specific marketplace visibility must still be reconciled with wording that says tenant marketplace/tenant-shared.
-3. Additional-space scope remains subject to the earlier design discrepancy, although action 5.1 now explicitly confirms Tenant Owner has a `Create space within the tenant` action in the broader role model.
-4. `Review agent configuration request` (6.4) should be mapped to the exact UI/state transition once available.
-5. Automated workflow 6.10 is present but detailed Agentic Workflow 2.0 screens/requirements are still needed for comprehensive functional definitions.
-
+1. Exact effective-permission semantics for users holding multiple roles.
+2. Additional-space rollout scope beyond the required default Space.
+3. Exact connection/credential setup semantics for each MCP/connection.
+4. Source PUBLIC/INTERNAL classification mechanism.
+5. Generated-file ownership/retention.
+6. Detailed Agentic Workflow 2.0 functional screens beyond action 6.9.
 ---
 
 ## 9. Traceability Convention
