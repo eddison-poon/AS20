@@ -1,6 +1,6 @@
 # Agent Studio 2.0 — P0 Requirements / Test Traceability Matrix (RTM)
 
-**Document Status:** Draft v0.3 — Updated 17 Sep 2026 after business walkthrough  
+**Document Status:** Draft v0.4 — Reconciled 23 Sep 2026 with implemented screens and updated RBAC  
 **Release Context:** Phase 1a / New Ideation — 28 Sep 2026 target  
 **Coverage Wave:** P0 Wave 1  
 **Scenario Catalogue:** `scenarios/Agent-Studio-2.0-Business-Scenario-Catalogue.md`  
@@ -11,7 +11,7 @@
 
 This RTM proves the chain **Requirement / Rule → Business Scenario → Manual Test Definition → Execution Variant → Evidence / Defect**. `COVERED` means test coverage is designed; it does **not** mean the test has passed.
 
-Updated baseline: **153 scenarios = 57 P0 + 70 P1 + 26 P2/TBD; 35 reusable P0 definitions; 101 explicit functional P0 execution variants; 2 dedicated E2E regression variants; 103 dashboard-managed variants; 10 smoke checks.**
+Updated baseline: **158 scenarios = 60 P0 + 72 P1 + 26 P2/TBD; 37 reusable P0 definitions; 109 explicit functional P0 execution variants; 2 dedicated E2E regression variants; 111 dashboard-managed variants; 10 smoke checks.**
 
 ### Status
 - **COVERED** — scenario, definition and planned execution exist.
@@ -40,7 +40,9 @@ Updated baseline: **153 scenarios = 57 P0 + 70 P1 + 26 P2/TBD; 35 reusable P0 de
 | REQ-GOV-008 | Mandatory default Space cannot be removed | FIG-TEN | GOV-SPC-001 | MTD-GOV-005 | EX-GOV-017 | COVERED |
 | REQ-SPC-001 | Tenant Owner creates Space | RAM 5.1/FLOW | GOV-SPC-005 | MTD-GOV-003 | EX-GOV-008..009 | PARTIAL — release scope |
 | REQ-SPC-002 | Tenant Owner assigns Space Owner | RAM 5.2 | GOV-SPC-004 | MTD-GOV-003 | EX-GOV-010 | COVERED |
-| REQ-SPC-003 | Space Owner assigns members/roles | RAM 6.3 | GOV-SPC-004 | MTD-GOV-004 | EX-GOV-011..014 | COVERED |
+| REQ-SPC-003 | Space Owner assigns members/roles from existing Tenant Members | RAM 5.5 | GOV-SPC-004/GOV-SPC-009 | MTD-GOV-004/GOV-006 | EX-GOV-011..014, EX-GOV-020..021 | COVERED |
+| REQ-SPC-004 | Tenant Member has read-only tenant configuration access | RAM 4.1 | GOV-TEN-013 | MTD-GOV-006 | EX-GOV-018..019 | COVERED |
+| REQ-SPC-005 | Space System Prompt participates in governance hierarchy | FIG-SPC/RULE | GOV-SPC-008 | MTD-GOV-007 | EX-GOV-022..023 | COVERED |
 
 # 4. Agent Creation & Configuration
 
@@ -56,26 +58,27 @@ Updated baseline: **153 scenarios = 57 P0 + 70 P1 + 26 P2/TBD; 35 reusable P0 de
 | REQ-BLD-012 | Cancelling creation creates no unintended Agent | FIG-BLD/RULE | BLD-CRT-008 | MTD-BLD-007 | EX-BLD-017 | COVERED |
 | REQ-BLD-004 | Space Designer configures Agent | RAM 6.2 | BLD-CFG-002 | MTD-BLD-002 | EX-BLD-005..008 | COVERED |
 | REQ-BLD-005 | Agent instructions cannot override higher governance | RULE | BLD-CFG-002 | MTD-BLD-002 | EX-BLD-005 + governed runtime | COVERED |
-| REQ-BLD-006 | Designer attaches approved MCP/skills | RAM 6.5 | BLD-CFG-003/004 | MTD-BLD-003 | EX-BLD-009..010 | COVERED |
+| REQ-BLD-006 | Designer attaches approved MCP/skills | RAM 6.4 | BLD-CFG-003/004 | MTD-BLD-003 | EX-BLD-009..010 | COVERED |
 | REQ-BLD-007 | Unapproved MCP/skills/API cannot be used | ENG/RULE | BLD-CFG-003/004, SEC-RBAC-009/010 | MTD-BLD-004 | EX-BLD-011..012 | COVERED |
+| REQ-BLD-013 | Approved connection/tool selection and personal access setup are enforced | FIG-BLD/RAM 6.4 | BLD-CFG-010 | MTD-BLD-003 | EX-BLD-018..019 | COVERED |
 
 # 5. Agent Visibility / Edit / RBAC
 
 | Req ID | Requirement / Rule | Source / RAM | Scenario | Definition | Execution | Status |
 |---|---|---|---|---|---|---|
-| REQ-ACC-001 | TO/SO/Designer/User can view same-Space Agents | RAM 6.6 | SEC-RBAC-001..004 | MTD-ACC-001 | EX-ACC-001..004 | COVERED |
-| REQ-ACC-002 | Platform Admin/Viewer do not gain same-Space Agent view | RAM 6.6 | SEC-RBAC-005 | MTD-ACC-001 | EX-ACC-005..006 | COVERED |
-| REQ-ACC-003 | Only Space Designer edits same-Space Agent | RAM 6.7 | SEC-RBAC-003/005/006 | MTD-ACC-002 | EX-ACC-007..011 | COVERED |
+| REQ-ACC-001 | TO/SO/Designer/User can view same-Space Agents | RAM 6.5 | SEC-RBAC-001..004 | MTD-ACC-001 | EX-ACC-001..004 | COVERED |
+| REQ-ACC-002 | Platform Admin/Viewer do not gain same-Space Agent view | RAM 6.5 | SEC-RBAC-005 | MTD-ACC-001 | EX-ACC-005..006 | COVERED |
+| REQ-ACC-003 | Only Space Designer edits same-Space Agent | RAM 6.6 | SEC-RBAC-003/005/006 | MTD-ACC-002 | EX-ACC-007..011 | COVERED |
 | REQ-ACC-004 | Authorization denial protects operation, not only UI | RULE | SEC-RBAC-006 | MTD-ACC-002/RUN-003/ISO-001 | direct-request variants | COVERED where service testable |
 
 # 6. Runtime / Harness
 
 | Req ID | Requirement / Rule | Source / RAM | Scenario | Definition | Execution | Status |
 |---|---|---|---|---|---|---|
-| REQ-RUN-001 | Designer can run same-Space Agent | RAM 6.8/7.1 | RUN-001 | MTD-RUN-001 | EX-RUN-001 | COVERED |
-| REQ-RUN-002 | Space User can run same-Space Agent | RAM 6.8/7.1 | RUN-001/SEC-RBAC-004 | MTD-RUN-002 | EX-RUN-002 | COVERED |
-| REQ-RUN-003 | Tenant Owner cannot run from TO role alone | RAM 6.8/7.1 | SEC-RBAC-005 | MTD-RUN-003 | EX-RUN-003 | COVERED |
-| REQ-RUN-004 | Space Owner cannot run from SO role alone | RAM 6.8/7.1 | SEC-RBAC-006 | MTD-RUN-003 | EX-RUN-004 | COVERED |
+| REQ-RUN-001 | Designer can run same-Space Agent | RAM 6.7/7.1 | RUN-001 | MTD-RUN-001 | EX-RUN-001 | COVERED |
+| REQ-RUN-002 | Space User can run same-Space Agent | RAM 6.7/7.1 | RUN-001/SEC-RBAC-004 | MTD-RUN-002 | EX-RUN-002 | COVERED |
+| REQ-RUN-003 | Tenant Owner cannot run from TO role alone | RAM 6.7/7.1 | SEC-RBAC-005 | MTD-RUN-003 | EX-RUN-003 | COVERED |
+| REQ-RUN-004 | Space Owner cannot run from SO role alone | RAM 6.7/7.1 | SEC-RBAC-006 | MTD-RUN-003 | EX-RUN-004 | COVERED |
 | REQ-RUN-005 | Unauthorized direct runtime invocation rejected | RULE | SEC-RBAC-006 | MTD-RUN-003 | EX-RUN-005..006 | COVERED |
 | REQ-RUN-006 | User can view own execution outputs/history | RAM 7.2 | RUN-007 | MTD-RUN-004 | EX-RUN-007..010 | COVERED |
 | REQ-RUN-007 | Multi-turn conversation retains appropriate context | FIG-RUN | RUN-003 | MTD-RUN-005 | EX-RUN-011..012 | COVERED |
@@ -106,51 +109,49 @@ Updated baseline: **153 scenarios = 57 P0 + 70 P1 + 26 P2/TBD; 35 reusable P0 de
 
 | Req ID | Requirement / Rule | Source / RAM | Scenario | Definition | Execution | Status |
 |---|---|---|---|---|---|---|
-| REQ-ISO-001 | Agent visibility limited to authorized same Space | ENG/FLOW/RAM 6.6 | MKT-004/SEC-RBAC-007 | MTD-ISO-001 | EX-ISO-001..004 | COVERED |
+| REQ-ISO-001 | Agent visibility limited to authorized same Space | ENG/FLOW/RAM 6.5 | MKT-004/SEC-RBAC-007 | MTD-ISO-001 | EX-ISO-001..004 | COVERED |
 | REQ-ISO-002 | Cross-Tenant unauthorized discovery/use denied | RULE | MKT-004/SEC-RBAC-008 | MTD-ISO-002 | EX-ISO-005..007 | COVERED |
 
 # 10. Publication / Marketplace / Versioning
 
 | Req ID | Requirement / Rule | Source / RAM | Scenario | Definition | Execution | Status |
 |---|---|---|---|---|---|---|
-| REQ-PUB-001 | Unpublished draft not generally consumable | FIG-BLD | PUB-001 | MTD-PUB-001 | EX-PUB-001..002 | COVERED |
-| REQ-PUB-002 | Private Testing creates private frozen version | FIG-BLD | PUB-002 | MTD-PUB-003 | EX-PUB-007..009 | PARTIAL — publisher role |
-| REQ-PUB-003 | Marketplace publication exposes permitted consumer scope | FIG-BLD/ENG | PUB-003/010 | MTD-PUB-002 | EX-PUB-003..006 | BLOCKED — mapping |
-| REQ-PUB-004 | Publication creates frozen release | FIG-BLD/RULE | PUB-009 | MTD-VER-001 | EX-VER-001..005 | COVERED functionally; role TBD |
+| REQ-PUB-001 | Unpublished draft not generally consumable; Designer may debug | FIG-BLD/RAM 6.7 | PUB-001 | MTD-PUB-001 | EX-PUB-001..002 | COVERED |
+| REQ-PUB-002 | Space Designer publishes Agent to Agent Marketplace of the Space | RAM 6.8/FIG-BLD | PUB-002/003 | MTD-PUB-002 | EX-PUB-003..006 | COVERED |
+| REQ-PUB-003 | Publication remains within intended Space boundary | RAM 6.8/7.1 | PUB-003/010 | MTD-PUB-003 | EX-PUB-007..009 | COVERED |
+| REQ-PUB-004 | Publication creates frozen release with version metadata | FIG-BLD/RULE | PUB-004/006/007/009 | MTD-PUB-002/VER-001 | EX-PUB-003..004, EX-VER-001..005 | COVERED |
 | REQ-VER-001 | Draft edits after V1 do not alter V1 | FIG-BLD/RULE | VER-001 | MTD-VER-001 | EX-VER-002..003 | COVERED |
-| REQ-VER-002 | Publish V2 creates new frozen version | FIG-BLD | VER-002 | MTD-VER-001 | EX-VER-004 | PARTIAL — publisher role |
+| REQ-VER-002 | Space Designer publishes V2 as new frozen version | RAM 6.8/FIG-BLD | VER-002 | MTD-VER-001 | EX-VER-004 | COVERED |
 | REQ-VER-003 | Consumer switches to V2 only after publish | FIG-MKT/RULE | VER-003 | MTD-VER-001 | EX-VER-003..005 | COVERED |
-| REQ-MKT-001 | Authorized consumer opens Marketplace | FIG-MKT | MKT-001 | MTD-MKT-001 | EX-MKT-001 | COVERED |
-| REQ-MKT-002 | Published Agent becomes discoverable | FIG-MKT | MKT-002 | MTD-MKT-001 | EX-MKT-002..003 | PARTIAL — scope mapping |
-| REQ-MKT-003 | Private Agent not exposed generally | FIG-MKT | MKT-003 | MTD-PUB-003 | EX-PUB-008..009 | COVERED functionally; role TBD |
+| REQ-MKT-001 | Authorized consumer opens Space Agent Marketplace | FIG-MKT/RAM 7.1 | MKT-001 | MTD-MKT-001 | EX-MKT-001 | COVERED |
+| REQ-MKT-002 | Published Agent becomes discoverable in intended Space | FIG-MKT/RAM 6.8 | MKT-002 | MTD-MKT-001 | EX-MKT-002..003 | COVERED |
+| REQ-MKT-003 | Cross-Space user cannot discover/run published Agent | RAM 6.8/7.1/RULE | MKT-004 | MTD-PUB-003/ISO-001 | EX-PUB-009, EX-MKT-004, EX-ISO-002..004 | COVERED |
 
 # 11. P0 E2E Traceability
 
 | E2E Scenario | Definition / Chain | Coverage |
 |---|---|---|
-| E2E-001 Governed lifecycle | MTD-E2E-001 / EX-E2E-001 / E2E-X01 | PARTIAL — publish transition |
+| E2E-001 Governed lifecycle | MTD-E2E-001 / EX-E2E-001 / E2E-X01 | COVERED |
 | E2E-002 Inheritance/capability boundary | MTD-E2E-001 / EX-E2E-001 | COVERED |
-| E2E-003 V1 first publication | MTD-E2E-001 + MTD-VER-001 / EX-E2E-001 | PARTIAL — publisher role |
+| E2E-003 V1 first publication | MTD-E2E-001 + MTD-VER-001 / EX-E2E-001 | COVERED |
 | E2E-004 V1 → draft → V2 | MTD-VER-001 / E2E-X04 | COVERED functionally |
-| E2E-005 Private boundary | MTD-PUB-003 / E2E-X05 | PARTIAL — publisher/private role |
+| E2E-005 Space publication boundary | MTD-PUB-003 / E2E-X05 | COVERED |
 | E2E-006 Space isolation | MTD-ISO-001 / E2E-X03 | COVERED |
 | E2E-007 Source-grounded runtime | MTD-E2E-002 + MTD-SRC-001/003 / EX-E2E-002 / E2E-X02 | COVERED |
 | E2E-008 Runtime-to-artifact | MTD-E2E-002 + MTD-GEN-001/002 / EX-E2E-002 / E2E-X02 | COVERED |
 
 # 12. Current P0 Coverage Position
 
-The updated P0 catalogue has **57 P0 scenarios** after BLD-CRT-004 through BLD-CRT-008 were raised from P1 to P0 during the 17 Sep business walkthrough. These intentionally map into **35 reusable definitions**, not 57 one-to-one cases. The functional definitions expand to **101 role/scope/state execution variants**. Two dedicated E2E regression variants bring the dashboard-managed baseline to **103 variants**. The **10 smoke checks** remain the initial environment sanity gate.
+The reconciled catalogue has **60 P0 scenarios** within **158 total scenarios**. These intentionally map into **37 reusable P0 definitions**, not one-to-one cases. The functional definitions expand to **109 role/scope/state execution variants**. Two dedicated E2E regression variants bring the dashboard-managed baseline to **111 variants**. The **10 smoke checks** remain the initial environment sanity gate.
 
-Primary remaining P0 uncertainty is the exact mapping among **Figma Publish / Private Testing / Marketplace Testing / RAM 6.9 Promote to tenant-shared**, plus the precise Marketplace scope.
+The updated matrix and implemented screen resolve the prior publication ambiguity for this release: **Space Designer publishes to the Agent Marketplace of the Space under RAM 6.8**. Production deployment remains out of scope.
 
 # 13. Open Requirement Clarifications
 
-1. Publish model and role ownership.
-2. Marketplace same-Space vs Tenant-shared wording.
-3. Additional-Space release scope.
+1. Additional-Space rollout scope beyond the required default Space.
 4. Pattern names/configuration: engineering Low Risk + SDLC vs Training Figma Low Risk + Research.
 5. Pattern UI read-only vs privileged Pattern administration.
-6. RAM 6.4 Review agent configuration request flow.
+4. RAM 6.3 Review agent configuration request flow.
 7. Source PUBLIC/INTERNAL classification mechanism.
 8. Generated-file ownership/retention.
 9. Multi-role effective permissions.
