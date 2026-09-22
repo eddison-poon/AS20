@@ -1,6 +1,6 @@
 # Agent Studio 2.0 — Business Scenario Catalogue
 
-**Document Status:** Draft v0.3 — Updated 17 Sep 2026 after business walkthrough  
+**Document Status:** Draft v0.4 — Reconciled 23 Sep 2026 with implemented screens and updated RBAC  
 **Release Context:** Phase 1a — New Ideation, target 28 Sep 2026  
 **Parent Strategy:** `docs/strategy/Agent-Studio-2.0-Functional-Test-Strategy.md`  
 **Purpose:** Define the business-level functional scenario inventory from which detailed Manual Test Definitions, RBAC executions, smoke suites and regression suites will be derived.
@@ -36,17 +36,17 @@ The role/access matrix is therefore an execution and authorization dimension wit
 
 ## 2. Release-Critical Golden Journey
 
-**Pattern / Tenant Governance → Agent Builder → Agent Configuration → Publish Version → Marketplace / Private Availability → Authorized User Opens Agent → Select / Upload Sources → Execute Prompt → Receive Response → Generate / Retrieve Output File**
+**Pattern / Tenant / Space Governance → Agent Builder → Agent Configuration → Publish Version → Space Agent Marketplace → Authorized User Opens Agent → Select / Upload Sources → Execute Prompt → Receive Response → Generate / Retrieve Output File**
 
 ---
 
-## 3. Scenario Summary — Updated 17 Sep 2026
+## 3. Scenario Summary — Updated 23 Sep 2026
 
 | Capability | P0 | P1 | P2 / TBD | Total |
 |---|---:|---:|---:|---:|
-| Foundation / Pattern & Tenant Governance | **10** | **14** | **6** | **30** |
+| Foundation / Pattern & Tenant Governance | **12** | **15** | **6** | **33** |
 | Agent Studio Homepage & Navigation | 0 | 3 | 3 | 6 |
-| Agent Builder & Configuration | **11** | **6** | **3** | 20 |
+| Agent Builder & Configuration | **12** | **7** | **3** | 22 |
 | Publication & Versioning | **8** | **7** | 2 | **17** |
 | Agent Marketplace | 4 | 6 | 4 | 14 |
 | Agent Runtime / Harness | 4 | 9 | 2 | 15 |
@@ -54,9 +54,9 @@ The role/access matrix is therefore an execution and authorization dimension wit
 | Generated Files | 2 | 7 | 1 | 10 |
 | Cross-Cutting RBAC / Isolation | 7 | 5 | 2 | 14 |
 | End-to-End Journeys | 8 | 3 | 1 | 12 |
-| **Total** | **57** | **70** | **26** | **153** |
+| **Total** | **60** | **72** | **26** | **158** |
 
-> 17 Sep walkthrough change: BLD-CRT-004 through BLD-CRT-008 were raised from P1 to P0. Total scenario inventory remains 153.
+> 23 Sep reconciliation adds five screen/RBAC-backed scenarios without decomposing every UI control into a separate case: Tenant Member visibility, Space System Prompt governance, tenant-member-only Space assignment, connection credential/setup behaviour and explicit Space Marketplace publication. Publication role/scope is now resolved to Space Designer → Agent Marketplace of the Space.
 
 > Counts are planning counts, not a commitment to 153 manual test cases. Related scenarios are intentionally covered by reusable Test Definitions and role/scope execution variants.
 
@@ -96,6 +96,7 @@ The role/access matrix is therefore an execution and authorization dimension wit
 | GOV-TEN-010 | P0 | Resource requiring access remains unavailable until connection established | Inherited/selected connection does not imply usable credentials/access | Design-ready |
 | GOV-TEN-011 | P0 | Tenant system prompt respects pattern governance | Tenant prompt adds local context but cannot override higher-priority pattern rules | Design-ready |
 | GOV-TEN-012 | P1 | Tenant system prompt applies across tenant spaces | Saved local context applies to applicable tenant agent calls | Design-ready |
+| GOV-TEN-013 | P0 | Tenant Member can view tenant configuration without administration rights | Tenant Member receives read-only tenant context but cannot change configuration/patterns/membership | Design-ready; updated RAM 4.1–4.5 |
 
 ## 4.3 Space & Membership Governance
 
@@ -108,6 +109,8 @@ The role/access matrix is therefore an execution and authorization dimension wit
 | GOV-SPC-005 | P2 | Create additional space | Additional space can be created where Day-1 scope permits | Dependency: design wording conflicts with optional-space flow |
 | GOV-SPC-006 | P2 | Separate spaces maintain independent membership/resource scope | Space-level boundaries are maintained | Dependency: additional-space confirmation |
 | GOV-SPC-007 | P2 | Membership changes propagate according to inheritance rules | Add/remove/change is reflected at intended tenant/space level | Dependency: final inheritance semantics |
+| GOV-SPC-008 | P0 | Space System Prompt extends governance without overriding higher rules | Space prompt persists and applies below Pattern/Tenant governance and above Agent instructions | Design-ready from implemented Space Management screen |
+| GOV-SPC-009 | P1 | Space membership is selected from existing Tenant Members | Space Owner can assign eligible Tenant Members; non-tenant identities cannot be directly added to Space | Design-ready; updated RAM 5.5 |
 
 ---
 
@@ -154,7 +157,9 @@ The role/access matrix is therefore an execution and authorization dimension wit
 | BLD-CFG-006 | P1 | Configure Advanced Settings | Supported settings save/persist | Detailed fields TBD |
 | BLD-CFG-007 | P1 | Remove previously selected configurable capability | Removal persists and affects subsequent draft runtime as intended | Design-ready |
 | BLD-CFG-008 | P1 | Reload configured draft | Saved configuration remains consistent | Design-ready |
-| BLD-CFG-009 | P1 | Test/chat with draft during configuration | Creator can validate draft according to permitted testing model | Design-ready |
+| BLD-CFG-009 | P1 | Test/chat with draft during configuration | Space Designer can run the draft from the debug window without Marketplace publication | Design-ready; updated RAM 6.7 |
+| BLD-CFG-010 | P0 | Configure approved connection/tool and required personal access | Designer can select approved connection/tool; required personal credentials/access are established or explicitly deferred before use | Design-ready from implemented connection screens |
+| BLD-CFG-011 | P1 | Select permitted Knowledge Base configuration | Designer can select only Knowledge Bases available to the current scope and selection persists | Design-ready from implemented Builder screen |
 
 ---
 
@@ -165,22 +170,22 @@ The role/access matrix is therefore an execution and authorization dimension wit
 | ID | Pri | Business Scenario | Expected Business Outcome | Status / Dependency |
 |---|---|---|---|---|
 | PUB-001 | P0 | Draft agent is not generally available before publication | Normal users cannot discover/use unpublished draft | Design-ready |
-| PUB-002 | P0 | Publish initial private-testing version | Frozen version is created with private visibility | Design-ready functionally; publisher role mapping pending |
-| PUB-003 | P0 | Publish initial marketplace-testing version | Frozen version becomes discoverable in permitted marketplace scope | Design-ready functionally; publisher role mapping pending |
+| PUB-002 | P0 | Space Designer publishes initial Agent version to Space Marketplace | Publish v1 creates a frozen release and makes it available through the Agent Marketplace of the Space | Design-ready; updated RAM 6.8 + implemented Publish v1 screen |
+| PUB-003 | P0 | Published Agent remains constrained to its Space Marketplace | Publication does not grant cross-Space discovery or execution | Design-ready; updated RAM 6.8/7.1 |
 | PUB-004 | P1 | Provide What's New/version notes | Publication metadata saves against version | Design-ready |
 | PUB-005 | P1 | Generate What's New text | Generated release-note assistance behaves correctly where enabled | Design-ready |
 | PUB-006 | P1 | Set category | Published version retains selected category | Design-ready |
 | PUB-007 | P1 | Set tags | Published version retains selected tags | Design-ready |
 | PUB-008 | P1 | Cancel publication | Current published/draft state remains unchanged | Design-ready |
 | PUB-009 | P0 | Publication creates frozen release | Published runtime is separated from mutable draft configuration | Design-ready |
-| PUB-010 | P0 | Marketplace publication respects space/tenant visibility boundary | Agent is exposed only in intended authorized marketplace scope | Dependency: UI says tenant marketplace; engineering says space-only |
+| PUB-010 | P0 | Marketplace publication respects Space visibility boundary | Agent is exposed only in the Agent Marketplace of its intended Space | Design-ready; updated RAM 6.8 resolves earlier tenant-shared ambiguity |
 
 ## 7.2 Version Lifecycle
 
 | ID | Pri | Business Scenario | Expected Business Outcome | Status / Dependency |
 |---|---|---|---|---|
 | VER-001 | P0 | Modify agent after Version N is published | New edits remain draft and Version N remains active | Design-ready |
-| VER-002 | P0 | Publish Version N+1 | New frozen version is created from approved draft state | Design-ready functionally; publisher role mapping pending |
+| VER-002 | P0 | Publish Version N+1 | New frozen version is created from approved draft state | Design-ready functionally; publisher role confirmed as Space Designer |
 | VER-003 | P0 | Marketplace/runtime switches to newly published version | Eligible users receive Version N+1 only after successful publish | Design-ready |
 | VER-004 | P1 | Failed publication preserves existing published version | Version N remains usable and uncorrupted | Design-ready |
 | VER-005 | P1 | Version metadata/history remains coherent | Version number/notes/state align with lifecycle | Design-ready |
