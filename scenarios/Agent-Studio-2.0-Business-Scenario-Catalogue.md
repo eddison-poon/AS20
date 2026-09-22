@@ -200,7 +200,7 @@ The role/access matrix is therefore an execution and authorization dimension wit
 |---|---|---|---|---|
 | MKT-001 | P0 | Authorized user opens marketplace | Marketplace shows agents user is permitted to discover | Design-ready |
 | MKT-002 | P0 | Published marketplace agent becomes discoverable | Successful publication results in marketplace availability | Design-ready; exact marketplace scope pending |
-| MKT-003 | P0 | Private agent is not exposed as general marketplace agent | Private visibility remains private | Design-ready functionally; private-access role mapping pending |
+| MKT-003 | P0 | Unpublished draft is not exposed in Agent Marketplace | Draft remains in Builder and does not appear as a consumable Marketplace Agent | Design-ready; implemented Draft/Active state + RAM 6.8 |
 | MKT-004 | P0 | Cross-space/cross-tenant unauthorized agent is not discoverable | Isolation boundary is enforced | Dependency: final marketplace scope |
 | MKT-005 | P1 | Search by agent name/description | Matching permitted agents returned | Design-ready |
 | MKT-006 | P1 | Filter by category | Results respect category and authorization | Design-ready |
