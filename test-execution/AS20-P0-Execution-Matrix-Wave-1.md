@@ -1,13 +1,13 @@
 # Agent Studio 2.0 — P0 Execution Matrix — Wave 1
 
-**Document Status:** Draft v0.3 — Updated 17 Sep 2026 after business walkthrough  
+**Document Status:** Draft v0.4 — Reconciled 23 Sep 2026 with implemented screens and updated RBAC  
 **Execution Status:** Not Executed — Awaiting Environment  
 **Test Definitions:** `test-definitions/manual/AS20-P0-Manual-Test-Definitions-Wave-1.md`  
 **RBAC Baseline:** `docs/role-access/Agent-Studio-2.0-RBAC-Accessibility-Matrix.md`
 
 ## 1. Purpose
 
-This consolidated matrix expands the **35 reusable P0 Manual Test Definitions** into **101 explicit functional execution variants**, plus **2 dedicated E2E regression execution variants**. The resulting AS20 dashboard-managed baseline is **103 execution variants**. It records who executes what, in which scope/state, and whether the operation is expected to be allowed or denied.
+This consolidated matrix expands the **37 reusable P0 Manual Test Definitions** into **109 explicit functional execution variants**, plus **2 dedicated E2E regression execution variants**. The resulting AS20 dashboard-managed baseline is **111 execution variants**. It records who executes what, in which scope/state, and whether the operation is expected to be allowed or denied.
 
 Expected access: **ALLOW**, **DENY**, **VIEW ONLY**, **TBD**, or **N/A**.
 
@@ -16,6 +16,7 @@ Expected access: **ALLOW**, **DENY**, **VIEW ONLY**, **TBD**, or **N/A**.
 | User ID | Role | Tenant / Space |
 |---|---|---|
 | U-TO-A | Tenant Owner | Tenant A / Space A |
+| U-TM-A | Tenant Member | Tenant A; not yet assigned to Space |
 | U-SO-A | Space Owner | Tenant A / Space A |
 | U-SD-A | Space Designer | Tenant A / Space A |
 | U-SU-A1 | Space User | Tenant A / Space A |
@@ -47,13 +48,19 @@ Prefer role-pure accounts for RBAC validation. Multi-role effective-permission t
 | EX-GOV-008 | MTD-GOV-003 | 5.1 | U-TO-A | Tenant A | ALLOW / N/A | Creates Space B if in scope |
 | EX-GOV-009 | MTD-GOV-003 | 5.1 | U-SO-A | Tenant A | DENY | Cannot create Space |
 | EX-GOV-010 | MTD-GOV-003 | 5.2 | U-TO-A | Space B | ALLOW / N/A | Assign/change Space Owner |
-| EX-GOV-011 | MTD-GOV-004 | 6.3 | U-SO-A | Space A | ALLOW | Add members/assign roles |
-| EX-GOV-012 | MTD-GOV-004 | 6.3 | U-TO-A | Space A | DENY | Does not receive 6.3 |
-| EX-GOV-013 | MTD-GOV-004 | 6.3 | U-SD-A | Space A | DENY | Cannot assign roles |
-| EX-GOV-014 | MTD-GOV-004 | 6.3 | U-SU-A1 | Space A | DENY | Cannot assign roles |
+| EX-GOV-011 | MTD-GOV-004 | 5.5 | U-SO-A | Space A | ALLOW | Add members/assign roles |
+| EX-GOV-012 | MTD-GOV-004 | 5.5 | U-TO-A | Space A | DENY | Does not receive 6.3 |
+| EX-GOV-013 | MTD-GOV-004 | 5.5 | U-SD-A | Space A | DENY | Cannot assign roles |
+| EX-GOV-014 | MTD-GOV-004 | 5.5 | U-SU-A1 | Space A | DENY | Cannot assign roles |
 | EX-GOV-015 | MTD-GOV-005 | — | Tenant Owner/admin view | Rollout tenants | ALLOW | All 10 required tenants exist |
 | EX-GOV-016 | MTD-GOV-005 | — | Tenant Owner/admin view | Default Spaces | ALLOW | Required default Space exists for each tenant |
 | EX-GOV-017 | MTD-GOV-005 | — | Tenant Owner | Mandatory default Space | DENY removal | Required default Space protected |
+| EX-GOV-018 | MTD-GOV-006 | 4.1 | U-TM-A | Tenant A configuration | VIEW ONLY | Tenant Member can view tenant configuration |
+| EX-GOV-019 | MTD-GOV-006 | 4.2-4.5 | U-TM-A | Tenant A administration | DENY | Tenant Member cannot administer tenant |
+| EX-GOV-020 | MTD-GOV-006 | 5.5 | U-SO-A | Assign U-TM-A to Space A | ALLOW | Existing Tenant Member can be assigned a Space role |
+| EX-GOV-021 | MTD-GOV-006 | 5.5 | U-SO-A | Non-tenant identity | DENY | Space membership cannot bypass tenant membership |
+| EX-GOV-022 | MTD-GOV-007 | 5.3 | U-SO-A | Space System Prompt | ALLOW | Space prompt saves and persists |
+| EX-GOV-023 | MTD-GOV-007 | 6.2/runtime | U-SD-A | Pattern/Tenant/Space/Agent conflict | DENY override | Precedence Pattern > Tenant > Space > Agent enforced |
 
 # 4. Agent Build & Configuration Executions
 
@@ -72,35 +79,37 @@ Prefer role-pure accounts for RBAC validation. Multi-role effective-permission t
 | EX-BLD-006 | MTD-BLD-002 | 6.2 | U-TO-A | Agent A | DENY | Cannot configure |
 | EX-BLD-007 | MTD-BLD-002 | 6.2 | U-SO-A | Agent A | DENY | Cannot configure |
 | EX-BLD-008 | MTD-BLD-002 | 6.2 | U-SU-A1 | Agent A | DENY | Cannot configure |
-| EX-BLD-009 | MTD-BLD-003 | 6.5 | U-SD-A | Agent A | ALLOW | Attach approved MCP/skill |
-| EX-BLD-010 | MTD-BLD-003 | 6.5 | U-SO-A | Agent A | DENY | Cannot attach MCP/skill |
-| EX-BLD-011 | MTD-BLD-004 | 6.5 | U-SD-A | Unapproved resource | DENY resource | Cannot attach/use |
-| EX-BLD-012 | MTD-BLD-004 | 4.4/6.5 | U-SD-A direct attempt | Agent A | DENY resource | Bypass rejected |
+| EX-BLD-009 | MTD-BLD-003 | 6.4 | U-SD-A | Agent A | ALLOW | Attach approved MCP/skill |
+| EX-BLD-010 | MTD-BLD-003 | 6.4 | U-SO-A | Agent A | DENY | Cannot attach MCP/skill |
+| EX-BLD-011 | MTD-BLD-004 | 6.4 | U-SD-A | Unapproved resource | DENY resource | Cannot attach/use |
+| EX-BLD-012 | MTD-BLD-004 | 4.4/6.4 | U-SD-A direct attempt | Agent A | DENY resource | Bypass rejected |
+| EX-BLD-018 | MTD-BLD-003 | 6.4 | U-SD-A | Approved connection/tool + personal setup | ALLOW | Tool selection and personal access setup persist |
+| EX-BLD-019 | MTD-BLD-003 | 6.4 | U-SD-A | Connection requiring access / setup later | DENY use until setup | Deferred credential setup does not grant usable access |
 
 # 5. Agent Visibility & Edit Executions
 
 | Exec ID | Definition | Matrix Ref | User / Role | Scope | Expected | Key Result |
 |---|---|---|---|---|---|---|
-| EX-ACC-001 | MTD-ACC-001 | 6.6 | U-TO-A | Same Space A | VIEW ONLY | Can view, not edit/run |
-| EX-ACC-002 | MTD-ACC-001 | 6.6 | U-SO-A | Same Space A | VIEW ONLY | Can view |
-| EX-ACC-003 | MTD-ACC-001 | 6.6 | U-SD-A | Same Space A | ALLOW | Can view |
-| EX-ACC-004 | MTD-ACC-001 | 6.6 | U-SU-A1 | Same Space A | ALLOW | Can view |
-| EX-ACC-005 | MTD-ACC-001 | 6.6 | U-PA | Agent A | DENY | No 6.6 from platform role |
-| EX-ACC-006 | MTD-ACC-001 | 6.6 | U-VR | Agent A | DENY | Catalogue access ≠ Agent visibility |
-| EX-ACC-007 | MTD-ACC-002 | 6.7 | U-SD-A | Agent A | ALLOW | Can edit |
-| EX-ACC-008 | MTD-ACC-002 | 6.7 | U-TO-A | Agent A | DENY | Cannot edit |
-| EX-ACC-009 | MTD-ACC-002 | 6.7 | U-SO-A | Agent A | DENY | Cannot edit |
-| EX-ACC-010 | MTD-ACC-002 | 6.7 | U-SU-A1 | Agent A | DENY | Cannot edit |
-| EX-ACC-011 | MTD-ACC-002 | 6.7 | Unauthorized direct request | Agent A | DENY | Backend rejects edit |
+| EX-ACC-001 | MTD-ACC-001 | 6.5 | U-TO-A | Same Space A | VIEW ONLY | Can view, not edit/run |
+| EX-ACC-002 | MTD-ACC-001 | 6.5 | U-SO-A | Same Space A | VIEW ONLY | Can view |
+| EX-ACC-003 | MTD-ACC-001 | 6.5 | U-SD-A | Same Space A | ALLOW | Can view |
+| EX-ACC-004 | MTD-ACC-001 | 6.5 | U-SU-A1 | Same Space A | ALLOW | Can view |
+| EX-ACC-005 | MTD-ACC-001 | 6.5 | U-PA | Agent A | DENY | No 6.6 from platform role |
+| EX-ACC-006 | MTD-ACC-001 | 6.5 | U-VR | Agent A | DENY | Catalogue access ≠ Agent visibility |
+| EX-ACC-007 | MTD-ACC-002 | 6.6 | U-SD-A | Agent A | ALLOW | Can edit |
+| EX-ACC-008 | MTD-ACC-002 | 6.6 | U-TO-A | Agent A | DENY | Cannot edit |
+| EX-ACC-009 | MTD-ACC-002 | 6.6 | U-SO-A | Agent A | DENY | Cannot edit |
+| EX-ACC-010 | MTD-ACC-002 | 6.6 | U-SU-A1 | Agent A | DENY | Cannot edit |
+| EX-ACC-011 | MTD-ACC-002 | 6.6 | Unauthorized direct request | Agent A | DENY | Backend rejects edit |
 
 # 6. Agent Runtime Executions
 
 | Exec ID | Definition | Matrix Ref | User / Role | Scope | Expected | Key Result |
 |---|---|---|---|---|---|---|
-| EX-RUN-001 | MTD-RUN-001 | 6.8/7.1 | U-SD-A | Agent A | ALLOW | Executes successfully |
-| EX-RUN-002 | MTD-RUN-002 | 6.8/7.1 | U-SU-A1 | Agent A | ALLOW | Executes successfully |
-| EX-RUN-003 | MTD-RUN-003 | 6.8/7.1 | U-TO-A | Agent A | DENY | View but cannot execute |
-| EX-RUN-004 | MTD-RUN-003 | 6.8/7.1 | U-SO-A | Agent A | DENY | View but cannot execute |
+| EX-RUN-001 | MTD-RUN-001 | 6.7/7.1 | U-SD-A | Agent A | ALLOW | Executes successfully |
+| EX-RUN-002 | MTD-RUN-002 | 6.7/7.1 | U-SU-A1 | Agent A | ALLOW | Executes successfully |
+| EX-RUN-003 | MTD-RUN-003 | 6.7/7.1 | U-TO-A | Agent A | DENY | View but cannot execute |
+| EX-RUN-004 | MTD-RUN-003 | 6.7/7.1 | U-SO-A | Agent A | DENY | View but cannot execute |
 | EX-RUN-005 | MTD-RUN-003 | 7.1 | U-PA | Agent A | DENY | Platform admin ≠ runtime |
 | EX-RUN-006 | MTD-RUN-003 | 7.1 | Unauthorized direct request | Agent A | DENY | Service rejects invocation |
 | EX-RUN-007 | MTD-RUN-004 | 7.2 | U-SU-A1 | Own history | ALLOW | Own history visible |
@@ -151,24 +160,24 @@ Prefer role-pure accounts for RBAC validation. Multi-role effective-permission t
 
 | Exec ID | Definition | User / Role | State / Scope | Expected | Status / Result |
 |---|---|---|---|---|---|
-| EX-PUB-001 | MTD-PUB-001 | U-SD-A | Unpublished draft | ALLOW creator test as supported | Design-ready |
-| EX-PUB-002 | MTD-PUB-001 | U-SU-A1 | Unpublished draft | DENY general consumption | Design-ready |
-| EX-PUB-003 | MTD-PUB-002 | Space Designer? | Figma Private Testing | TBD | Role mapping blocked |
-| EX-PUB-004 | MTD-PUB-002 | Designer?/Tenant Owner? | Marketplace Testing | TBD | Role mapping blocked |
-| EX-PUB-005 | MTD-PUB-002 | U-TO-A | RAM 6.9 tenant-shared | ALLOW per RAM | Mapping to Figma TBD |
-| EX-PUB-006 | MTD-PUB-002 | U-SD-A | RAM 6.9 tenant-shared | DENY per RAM | Mapping to Figma TBD |
-| EX-PUB-007 | MTD-PUB-003 | Applicable publisher | Draft → Private Testing | TBD role | Frozen private version created |
-| EX-PUB-008 | MTD-PUB-003 | Authorized private user/creator | Private Agent A | ALLOW | Intended private access |
-| EX-PUB-009 | MTD-PUB-003 | Normal Marketplace consumer | Private Agent A | DENY discovery | Not in general Marketplace |
-| EX-VER-001 | MTD-VER-001 | Applicable publisher | Publish V1 | TBD role | Frozen V1 created |
+| EX-PUB-001 | MTD-PUB-001 | U-SD-A | Unpublished draft / debug | ALLOW debug | Draft remains outside Marketplace |
+| EX-PUB-002 | MTD-PUB-001 | U-SU-A1 | Unpublished draft | DENY consumption | Draft not discoverable/runnable by Space User |
+| EX-PUB-003 | MTD-PUB-002 | U-SD-A | Publish v1 | ALLOW | Frozen v1 created |
+| EX-PUB-004 | MTD-PUB-002 | U-SD-A | What's New / Category / Tags | ALLOW | Publication metadata persists |
+| EX-PUB-005 | MTD-PUB-002 | U-TO-A | Publish action | DENY | Tenant Owner cannot publish from role alone |
+| EX-PUB-006 | MTD-PUB-002 | U-SO-A | Publish action | DENY | Space Owner cannot publish from role alone |
+| EX-PUB-007 | MTD-PUB-003 | U-SD-A | Space A Marketplace publication | ALLOW | Agent published to Space A Marketplace |
+| EX-PUB-008 | MTD-PUB-003 | U-SU-A1 | Space A published Agent | ALLOW | Same-Space consumer discovers/runs |
+| EX-PUB-009 | MTD-PUB-003 | U-SU-B | Space A published Agent | DENY | Cross-Space consumer cannot discover/run |
+| EX-VER-001 | MTD-VER-001 | U-SD-A | Publish V1 | ALLOW | Frozen V1 created |
 | EX-VER-002 | MTD-VER-001 | U-SD-A | Edit draft after V1 | ALLOW draft | V1 unchanged |
 | EX-VER-003 | MTD-VER-001 | U-SU-A1 | Runtime before V2 | ALLOW V1 | Still receives V1 |
-| EX-VER-004 | MTD-VER-001 | Applicable publisher | Publish V2 | TBD role | Frozen V2 created |
+| EX-VER-004 | MTD-VER-001 | U-SD-A | Publish V2 | ALLOW | Frozen V2 created |
 | EX-VER-005 | MTD-VER-001 | U-SU-A1 | Runtime after V2 | ALLOW V2 | Receives V2 |
-| EX-MKT-001 | MTD-MKT-001 | U-SU-A1 | Permitted Marketplace | ALLOW | Opens permitted set |
-| EX-MKT-002 | MTD-MKT-001 | U-SU-A1 | Published Agent A | ALLOW | Discoverable after publish/share |
-| EX-MKT-003 | MTD-MKT-001 | U-SU-A1 | Agent A listing | ALLOW | Correct version opens |
-| EX-MKT-004 | MTD-MKT-001 + MTD-ISO-001 | U-SU-B | Agent A | DENY | Unauthorized listing absent |
+| EX-MKT-001 | MTD-MKT-001 | U-SU-A1 | Space A Marketplace | ALLOW | Opens permitted Space Marketplace set |
+| EX-MKT-002 | MTD-MKT-001 | U-SU-A1 | Published Agent A | ALLOW | Discoverable after Space Designer publishes |
+| EX-MKT-003 | MTD-MKT-001 | U-SU-A1 | Agent A listing | ALLOW | Correct published version opens |
+| EX-MKT-004 | MTD-MKT-001 + MTD-ISO-001 | U-SU-B | Agent A | DENY | Unauthorized cross-Space listing absent |
 
 # 11. Dedicated E2E Regression Executions
 
@@ -181,7 +190,7 @@ These two variants are dedicated regression executions. They may later be select
 
 # 12. E2E Reference Chains
 
-**E2E-X01 — Governed Build-to-Run:** Tenant Owner governance → Space Owner role assignment → Designer build/configure → approved capability → unapproved capability denied → publish/share TBD → Space User view/run → Tenant/Space Owner run denied.
+**E2E-X01 — Governed Build-to-Run:** Tenant Owner governance → Space Owner role assignment → Designer build/configure → approved capability → unapproved capability denied → Space Designer publish to Space Marketplace → Space User view/run → Tenant/Space Owner run denied.
 
 **E2E-X02 — Runtime Source-to-Artifact:** Space User run → personal source upload/select → grounded question → generated file → retrieve → second-user source/artifact access denied as applicable.
 
@@ -189,7 +198,7 @@ These two variants are dedicated regression executions. They may later be select
 
 **E2E-X04 — Frozen Version Lifecycle:** Publish V1 → consumer verifies V1 → edit draft → consumer still V1 → publish V2 → consumer verifies V2.
 
-**E2E-X05 — Private Publication Boundary:** Publish Private Testing → authorized private access → normal Marketplace consumer cannot discover/use.
+**E2E-X05 — Space Publication Boundary:** Space Designer publishes to Space A Marketplace → Space A consumer discovers/runs → Space B-only consumer cannot discover/use.
 
 The E2E-X01..X05 chains are traceability/reference flows. They reuse functional variants and are not additional dashboard cases beyond EX-E2E-001 and EX-E2E-002.
 
@@ -197,17 +206,17 @@ The E2E-X01..X05 chains are traceability/reference flows. They reuse functional 
 
 | Area | Planned Executions |
 |---|---:|
-| Pattern / Governance / Space | 21 |
-| Agent Build / Configuration | 17 |
+| Pattern / Governance / Space | 27 |
+| Agent Build / Configuration | 19 |
 | Visibility / Edit | 11 |
 | Runtime | 14 |
 | Sources | 8 |
 | Generated Files | 5 |
 | Space / Tenant Isolation | 7 |
 | Publication / Marketplace / Version | 18 |
-| **Functional execution variants** | **101** |
+| **Functional execution variants** | **109** |
 | Dedicated E2E regression variants | **2** |
-| **Dashboard-managed execution variants** | **103** |
+| **Dashboard-managed execution variants** | **111** |
 
 # 14. Recommended Smoke Subset
 
@@ -224,7 +233,7 @@ The E2E-X01..X05 chains are traceability/reference flows. They reuse functional 
 | SMK-09 | EX-GEN-001 | Generated artifact works |
 | SMK-10 | EX-ISO-002 | Cross-Space visibility blocked |
 
-Publication/share is inserted between SMK-04 and SMK-05 once exact state/role mapping is confirmed.
+Space Designer publication to the Space Marketplace (EX-PUB-003/007) should be inserted between SMK-04 and SMK-05 for an end-to-end smoke run.
 
 # 15. Evidence Expectations
 
@@ -232,8 +241,7 @@ Record Execution ID, build/environment, tester/user/role, Tenant/Space, Agent/ve
 
 # 16. Current Clarifications
 
-1. Publish / Private Testing / Marketplace Testing / RAM 6.9 mapping.
-2. Additional-Space release scope.
+1. Additional-Space rollout scope beyond the required default Space.
 3. Source extensions and maximum-size boundary.
 4. Generated-file ownership/retention.
 5. Multi-role effective permissions.
