@@ -107,9 +107,9 @@ Prefer role-pure accounts for RBAC validation. Multi-role effective-permission t
 | Exec ID | Definition | Matrix Ref | User / Role | Scope | Expected | Key Result |
 |---|---|---|---|---|---|---|
 | EX-RUN-001 | MTD-RUN-001 | 6.7/7.1 | U-SD-A | Agent A | ALLOW | Executes successfully |
-| EX-RUN-002 | MTD-RUN-002 | 6.7/7.1 | U-SU-A1 | Agent A | ALLOW | Executes successfully |
-| EX-RUN-003 | MTD-RUN-003 | 6.7/7.1 | U-TO-A | Agent A | DENY | View but cannot execute |
-| EX-RUN-004 | MTD-RUN-003 | 6.7/7.1 | U-SO-A | Agent A | DENY | View but cannot execute |
+| EX-RUN-002 | MTD-RUN-002 | 7.1 | U-SU-A1 | Agent A | ALLOW | Executes successfully |
+| EX-RUN-003 | MTD-RUN-003 | 7.1 | U-TO-A | Agent A | DENY | View but cannot execute |
+| EX-RUN-004 | MTD-RUN-003 | 7.1 | U-SO-A | Agent A | DENY | View but cannot execute |
 | EX-RUN-005 | MTD-RUN-003 | 7.1 | U-PA | Agent A | DENY | Platform admin ≠ runtime |
 | EX-RUN-006 | MTD-RUN-003 | 7.1 | Unauthorized direct request | Agent A | DENY | Service rejects invocation |
 | EX-RUN-007 | MTD-RUN-004 | 7.2 | U-SU-A1 | Own history | ALLOW | Own history visible |
